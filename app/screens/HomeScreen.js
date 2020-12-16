@@ -22,10 +22,12 @@ export default HomeScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#333945"
+        backgroundColor: "#333945",
+        
     },
     safeContainer: {
-        flex: 1
+        flex: 1,
+        
     },
     topContainer: {
         flex: 1,
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#A4B0BD",
         alignContent: "center",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     },
     titleText: {
         flex: 1,

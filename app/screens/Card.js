@@ -19,12 +19,14 @@ export default Card;
 const styles = StyleSheet.create({
     card: {
         flex: 1,
+        maxWidth: '80%',
+        flexDirection: "row"
     },
     cardHeader: {
         flex: 1,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
-        backgroundColor: "white"
+        backgroundColor: "white",
     },
     cardBody: {
         flex: 1,
