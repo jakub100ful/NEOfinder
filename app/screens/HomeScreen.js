@@ -1,37 +1,35 @@
 import React from 'react';
 import { useState } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, Button } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import moment from "moment";
+import getNEOList from '../api/api';
 
 
 function HomeScreen() {
     const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
-    const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-    const onChange = (event, selectedDate) => {
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const handleConfirm = (selectedDate) => {
         const currentDate = selectedDate || date;
-        setShow(Platform.OS === 'ios');
         setDate(moment(currentDate).format("YYYY-MM-DD"));
+        hideDatePicker();
     };
 
-    const showMode = (currentMode) => {
-        setShow(true);
-        setMode(currentMode);
-    };
-
-    const showDatepicker = () => {
-        showMode('date');
-    };
-
-    const hideDatepicker = () => {
-        setShow(false);
+    const formSubmit = (date) => {
+        console.log("Click");
+        const list = getNEOList(date);
     }
-
-    console.log(date);
 
     return (
         <View style={styles.container}>
@@ -45,31 +43,30 @@ function HomeScreen() {
                     <View style={styles.formContainer}>
                         <View>
                             {/* Datepicker */}
+                            <Text style={styles.datepickerTitle}>Enter Date</Text>
                             <View style={styles.datepickerView}>
                                 <TextInput
                                 style={styles.textInput}
                                 //onChangeText={text => onChangeText(text)}
                                 value={date}
-                                onFocus={showDatepicker}
+                                onFocus={showDatePicker}
                                 />
-                                <TouchableHighlight onPress={showDatepicker}>
+                                <TouchableHighlight onPress={showDatePicker}>
                                     <Ionicons name="calendar-sharp" size={24} color="black" />                                
                                 </TouchableHighlight>
                             </View>
-                            {show && (
-                                <View>
-                                    <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={moment(date).format('YYYY-MM-DDThh:mm:ssZ')}
-                                    mode={mode}
-                                    display="default"
-                                    onChange={onChange}
-                                    />
-                                    <Button title="Done" onPress={hideDatepicker}/>
-                                </View>
-                            )}
+                                <DateTimePickerModal
+                                    isVisible={isDatePickerVisible}
+                                    mode="date"
+                                    onConfirm={handleConfirm}
+                                    onCancel={hideDatePicker}
+                                />
                             </View>
+                            
                     </View>
+                    <TouchableHighlight style={styles.submitButton} onPress={() => formSubmit(date)}>
+                        <Text style={styles.submitButtonText}>Find NEOs</Text>
+                    </TouchableHighlight>
                 </View>
             </SafeAreaView>
         </View>
@@ -123,5 +120,18 @@ const styles = StyleSheet.create({
         borderWidth: 1, 
         flex: 6,
         backgroundColor: "white"
+    },
+    datepickerTitle: {
+        fontSize: 25,
+        fontWeight: '500'
+    },
+    submitButton: {
+        backgroundColor: "#3498DB",
+        padding: "5%",
+        borderRadius: 25,
+    },
+    submitButtonText: {
+        fontWeight: '500',
+        fontSize: 20
     }
 })
