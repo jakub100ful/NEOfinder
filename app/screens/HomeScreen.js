@@ -4,16 +4,18 @@ import { View, StyleSheet, Text, SafeAreaView, Button } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
+import moment from "moment";
+
 
 function HomeScreen() {
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
-        setDate(currentDate);
+        setDate(moment(currentDate).format("YYYY-MM-DD"));
     };
 
     const showMode = (currentMode) => {
@@ -58,7 +60,7 @@ function HomeScreen() {
                                 <View>
                                     <DateTimePicker
                                     testID="dateTimePicker"
-                                    value={date}
+                                    value={moment(date).format('YYYY-MM-DDThh:mm:ssZ')}
                                     mode={mode}
                                     display="default"
                                     onChange={onChange}
