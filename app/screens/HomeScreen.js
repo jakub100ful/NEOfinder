@@ -29,6 +29,8 @@ function HomeScreen() {
         setShow(false);
     }
 
+    console.log(date);
+
     return (
         <View style={styles.container}>
             <SafeAreaView style={styles.safeContainer}>
@@ -40,9 +42,10 @@ function HomeScreen() {
                 <View style={styles.mainContainer}>
                     <View style={styles.formContainer}>
                         <View>
+                            {/* Datepicker */}
                             <View style={styles.datepickerView}>
                                 <TextInput
-                                style={{ height: 40, borderColor: 'gray', borderWidth: 1, flex: 6 }}
+                                style={styles.textInput}
                                 //onChangeText={text => onChangeText(text)}
                                 value={date}
                                 onFocus={showDatepicker}
@@ -111,5 +114,12 @@ const styles = StyleSheet.create({
     datepickerView: {
         flex: 1,
         flexDirection: 'row',
+    },
+    textInput: { 
+        height: 40, 
+        borderColor: 'gray', 
+        borderWidth: 1, 
+        flex: 6,
+        backgroundColor: "white"
     }
 })
