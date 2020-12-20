@@ -2,8 +2,8 @@ import React from 'react';
 import { useState } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, Button } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-import { FontAwesome } from '@expo/vector-icons';
+import { TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons';
 
 function HomeScreen() {
     const [date, setDate] = useState(new Date());
@@ -47,7 +47,9 @@ function HomeScreen() {
                                 value={date}
                                 onFocus={showDatepicker}
                                 />
-                                <FontAwesome name="calendar" size={24} color="black" />                                
+                                <TouchableHighlight onPress={showDatepicker}>
+                                    <Ionicons name="calendar-sharp" size={24} color="black" />                                
+                                </TouchableHighlight>
                             </View>
                             {show && (
                                 <View>
