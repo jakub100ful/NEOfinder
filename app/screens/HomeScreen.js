@@ -9,8 +9,11 @@ import getNEOList from '../api/api';
 
 
 function HomeScreen() {
+    const apiKey = "R3aOcYecyMfmnmoOL17jBY0ohDkk5o3e73j4O8BX";
+
     const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [neoList, setNeoList] = useState(null);
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -26,9 +29,17 @@ function HomeScreen() {
         hideDatePicker();
     };
 
+    function getNEOList(date){
+        fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${date}&api_key=${apiKey}`)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            setNeoList(responseJson.near_earth_objects);
+        })
+    }
+
     const formSubmit = (date) => {
-        console.log("Click");
-        const list = getNEOList(date);
+        getNEOList(date);
+        console.log(neoList);
     }
 
     return (

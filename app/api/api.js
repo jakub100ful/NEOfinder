@@ -8,8 +8,8 @@ function getNEOList(date){
     fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${date}&api_key=${apiKey}`)
     .then((response) => response.json())
     .then((responseJson) => {
-        console.log(responseJson.near_earth_objects);
-        return responseJson.near_earth_objects;
+        var neoList = responseJson.near_earth_objects;
+        return neoList;
     })
 }
 
