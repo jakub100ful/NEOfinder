@@ -2,18 +2,17 @@ import React from 'react';
 import { useState } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, Button } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import moment from "moment";
 import getNEOList from '../api/api';
 
 
-function HomeScreen() {
+function HomeScreen(props) {
     const apiKey = "R3aOcYecyMfmnmoOL17jBY0ohDkk5o3e73j4O8BX";
 
     const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [neoList, setNeoList] = useState(null);
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -29,17 +28,8 @@ function HomeScreen() {
         hideDatePicker();
     };
 
-    function getNEOList(date){
-        fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${date}&api_key=${apiKey}`)
-        .then((response) => response.json())
-        .then((responseJson) => {
-            setNeoList(responseJson.near_earth_objects);
-        })
-    }
-
     const formSubmit = (date) => {
-        getNEOList(date);
-        console.log(neoList);
+        props.navigation.navigate('Results', {date: date});
     }
 
     return (
@@ -73,11 +63,18 @@ function HomeScreen() {
                                     onCancel={hideDatePicker}
                                 />
                             </View>
-                            
                     </View>
-                    <TouchableHighlight style={styles.submitButton} onPress={() => formSubmit(date)}>
-                        <Text style={styles.submitButtonText}>Find NEOs</Text>
-                    </TouchableHighlight>
+                    <View style={styles.submitButton}>
+                        <TouchableHighlight onPress={() => formSubmit(date)}>
+                            <Text style={styles.submitButtonText}>Find NEOs</Text>
+                        </TouchableHighlight>
+                    </View>
+                    <View style={styles.neoList}>
+                        <FlatList>
+
+                        </FlatList>
+                    </View>
+                    
                 </View>
             </SafeAreaView>
         </View>
@@ -101,6 +98,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#333945",
         alignContent: "center",
         justifyContent: "center",
+        alignItems: "center"
     },
     mainContainer: {
         flex: 8,
@@ -144,5 +142,9 @@ const styles = StyleSheet.create({
     submitButtonText: {
         fontWeight: '500',
         fontSize: 20
+    },
+    neoList: {
+        flex: 6,
+        backgroundColor: "white"
     }
 })

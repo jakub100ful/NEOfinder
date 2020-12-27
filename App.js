@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MainTabNavigator from './app/screens/MainTabNavigator';
 
+
 export default function App() {
   return (
     <MainTabNavigator />
