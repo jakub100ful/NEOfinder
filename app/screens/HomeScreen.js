@@ -9,8 +9,7 @@ import getNEOList from '../api/api';
 
 
 function HomeScreen(props) {
-    const apiKey = "R3aOcYecyMfmnmoOL17jBY0ohDkk5o3e73j4O8BX";
-
+    
     const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 

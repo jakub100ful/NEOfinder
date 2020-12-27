@@ -58,24 +58,33 @@ function ResultScreen(props) {
 
     useEffect(() => {
         // API Fetch Call
-        fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${date}&api_key=${apiKey}`)
-        .then((response) => response.json())
-        .then((responseJson) => {
-        // Unloading payload depending on a successful call.
-            if (responseJson.near_earth_objects){
-                setNeoList(responseJson.near_earth_objects);
-            }else{
-                setError(responseJson.error.message);
+        if(neoList == null){
+            console.log("NEO Fetched");
+            fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${date}&api_key=${apiKey}`)
+            .then((response) => response.json())
+            .then((responseJson) => {
+            // Unloading payload depending on a successful call.
+                if (responseJson.near_earth_objects){
+                    const tempNEOList = [];
+                    
+                    responseJson.near_earth_objects.forEach((date)=>{
+                        console.log("Here", date);
+                        date.forEach((neo)=>{
+                            tempNEOList.push(neo);
+                        })
+                    })
+                    setNeoList(tempNEOList);
+                }else{
+                    setError(responseJson.error.message);
+                }
+            // Error Handling
+            }).catch((er) => {
+                setError(er);
+            })
+    
+            if(error){
+                console.log(error);
             }
-        // Error Handling
-        }).catch((er) => {
-            setError(er);
-        })
-
-        if(error){
-            console.log(error);
-        }else{
-            console.log(neoList);
         }
     })   
 
@@ -91,13 +100,14 @@ function ResultScreen(props) {
                 <Text>{error}</Text>
             </View>
             <FlatList
-            data={mockData}
+            data={neoList}
             keyExtractor={item => item.id}
             ItemSeparatorComponent={ItemSeparator}
             renderItem={({ item }) => (
                 <View style={styles.item}>
                     <Text style={styles.itemHeader}>
-                    {item.text}
+                        {item.name}
+                        Item
                     </Text>
 
                     {/* Item Body */}
