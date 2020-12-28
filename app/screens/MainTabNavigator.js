@@ -6,6 +6,7 @@ import HomeScreen from './HomeScreen';
 import SavedScreen from './SavedScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import ResultScreen from './ResultScreen';
+import RenderScreen from './RenderScreen';
 
 
 function MainTabNavigator(props) {
@@ -17,14 +18,12 @@ function MainTabNavigator(props) {
         <SearchStack.Navigator>
             <SearchStack.Screen name="Search" component={HomeScreen}/>
             <SearchStack.Screen name="Results" component={ResultScreen}/>
+            <SearchStack.Screen name="Orbit" component={RenderScreen}/>
         </SearchStack.Navigator>
     )
 
     return (
         <NavigationContainer>
-            {/* <Stack.Navigator>
-                <Stack.Screen name="Results" component={ResultScreen} />
-            </Stack.Navigator> */}
             <Tab.Navigator>
                 <Tab.Screen name="HomeScreen" component={SearchStackScreen}/>
                 <Tab.Screen name="SavedScreen" component={SavedScreen}/>

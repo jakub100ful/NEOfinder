@@ -80,15 +80,6 @@ function ResultScreen(props) {
                     }
 
                     setNeoList(tempNEOList);
-
-                    // for (var date in Object.keys(responseJson.near_earth_objects)){
-                    //     console.log("Here", date);
-                    //     tempNEOList.push(responseJson.near_earth_objects[date].forEach((neo)=>{
-                    //         return neo;
-                    //     }))
-                    // }
-                    // console.log(tempNEOList);
-                    // setNeoList(tempNEOList);
                 }else{
                     setError(responseJson.error.message);
                 }
@@ -104,7 +95,7 @@ function ResultScreen(props) {
     })   
 
     const viewOrbitNEO = (NEOspk) => {
-        props.navigation.navigate('Orbit', {NEOspk: NEOspk});
+        props.navigation.navigate('Orbit', {spk: NEOspk});
     }
 
     return (
@@ -146,7 +137,7 @@ function ResultScreen(props) {
                             
                         </View>
                         <View>
-                        <TouchableOpacity style={styles.viewButton} onPress={() => {viewOrbitNEO(item.spk)}}>
+                        <TouchableOpacity style={styles.viewButton} onPress={() => {viewOrbitNEO(item.id)}}>
                             <Text style={styles.addButtonText}>View Orbit</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.addButton} onPress={() => {addNEO(item.id)}}>
