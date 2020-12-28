@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import * as THREE from "three";
 import ExpoTHREE from "expo-three"
 
+// https://ssd-api.jpl.nasa.gov/doc/sbdb.html
+
 export default class RenderScreen extends Component {  
     render() {    
        return(
