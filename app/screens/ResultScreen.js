@@ -71,9 +71,12 @@ function ResultScreen(props) {
                     const tempNEOList = [];
 
                     for (let key in responseNEO){
-                        responseNEO[key].forEach((NEO)=>{
-                            tempNEOList.push(NEO);
-                        })
+                        if (date == key){
+                            responseNEO[key].forEach((NEO)=>{
+                                tempNEOList.push(NEO);
+                            })
+                        }
+                        
                     }
 
                     setNeoList(tempNEOList);
