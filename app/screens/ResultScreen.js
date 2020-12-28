@@ -20,7 +20,7 @@ const getAllData = () =>{
     AsyncStorage.getAllKeys().then((keys) => {
       return AsyncStorage.multiGet(keys)
         .then((result) => {
-          console.log(JSON.parse(addedList));
+          console.log(JSON.parse(result));
         }).catch((e) =>{
           console.log(e);
         });
@@ -50,6 +50,8 @@ const addNEO = (addedNEO) =>{
     getAllData();
 };
 
+
+
 function ResultScreen(props) {
     const apiKey = "R3aOcYecyMfmnmoOL17jBY0ohDkk5o3e73j4O8BX";
     const [date, setDate] = useState(props.route.params.date);
@@ -65,15 +67,25 @@ function ResultScreen(props) {
             .then((responseJson) => {
             // Unloading payload depending on a successful call.
                 if (responseJson.near_earth_objects){
+                    const responseNEO = responseJson.near_earth_objects;
                     const tempNEOList = [];
-                    
-                    responseJson.near_earth_objects.forEach((date)=>{
-                        console.log("Here", date);
-                        date.forEach((neo)=>{
-                            tempNEOList.push(neo);
+
+                    for (let key in responseNEO){
+                        responseNEO[key].forEach((NEO)=>{
+                            tempNEOList.push(NEO);
                         })
-                    })
+                    }
+
                     setNeoList(tempNEOList);
+
+                    // for (var date in Object.keys(responseJson.near_earth_objects)){
+                    //     console.log("Here", date);
+                    //     tempNEOList.push(responseJson.near_earth_objects[date].forEach((neo)=>{
+                    //         return neo;
+                    //     }))
+                    // }
+                    // console.log(tempNEOList);
+                    // setNeoList(tempNEOList);
                 }else{
                     setError(responseJson.error.message);
                 }
@@ -87,6 +99,10 @@ function ResultScreen(props) {
             }
         }
     })   
+
+    const viewOrbitNEO = (NEOspk) => {
+        props.navigation.navigate('Orbit', {NEOspk: NEOspk});
+    }
 
     return (
         <View
@@ -104,20 +120,37 @@ function ResultScreen(props) {
             keyExtractor={item => item.id}
             ItemSeparatorComponent={ItemSeparator}
             renderItem={({ item }) => (
-                <View style={styles.item}>
+                <View key={item.id} style={styles.item}>
                     <Text style={styles.itemHeader}>
                         {item.name}
-                        Item
                     </Text>
 
                     {/* Item Body */}
                     <View style={styles.itemBodyView}>
-                        <Text style={styles.itemBodyText}>
-                        {item.id}
-                        </Text>
+                        <View>
+                            <Text style={styles.itemBodyText}>
+                            Orbiting Body: {item.close_approach_data[0].orbiting_body}
+                            </Text>
+                            <Text>
+                            Close Approach Date: {item.close_approach_data[0].close_approach_date}
+                            </Text>
+                            <Text>
+                            Miss Distance: {Math.round(item.close_approach_data[0].miss_distance.kilometers*100)/100} km
+                            </Text>
+                            <Text>
+                            Relative Velocity: {Math.round(item.close_approach_data[0].relative_velocity.kilometers_per_second*100)/100} km/s
+                            </Text>
+                            
+                        </View>
+                        <View>
+                        <TouchableOpacity style={styles.viewButton} onPress={() => {viewOrbitNEO(item.spk)}}>
+                            <Text style={styles.addButtonText}>View Orbit</Text>
+                        </TouchableOpacity>
                         <TouchableOpacity style={styles.addButton} onPress={() => {addNEO(item.id)}}>
                             <Text style={styles.addButtonText}>Add NEO</Text>
                         </TouchableOpacity>
+
+                        </View>
                     </View>
                     
                 </View>
@@ -133,6 +166,11 @@ const styles = StyleSheet.create({
     addButton: {
         backgroundColor: "lightblue",
         padding: 5
+    },
+    viewButton: {
+        backgroundColor: "lightblue",
+        padding: 5,
+        marginBottom: 5
     },
     addButtonText: {
         fontWeight: '500',
