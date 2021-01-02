@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Image, Dimensions } from 'react-native';
+import { StyleSheet, View, Image, Text, ImageBackground } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MainTabNavigator from './MainTabNavigator';
+import { useFonts } from 'expo-font';
 
 // const starTile = require('../../assets/bg-star-tile.png');
 
@@ -30,37 +31,67 @@ import MainTabNavigator from './MainTabNavigator';
 // });
 
 function IntroScreen(props) {
-    return (
-        <View style={styles.mainContainer}>
-            <View style={styles.logoView}>
-                <Image style={styles.stretch} source={require('../../assets/neo-finder-logo.png')}/>
+    let [fontsLoaded] = useFonts({
+        '8-bit-Arcade-In': require('../../assets/fonts/8-bit-Arcade-In.ttf'),
+    })
+
+    if (!fontsLoaded) {
+        return(
+            <View>
+                <Text>Font could not be loaded.</Text>
             </View>
-            <View style={styles.buttonView}>
-                <TouchableOpacity onPress={()=>{return <MainTabNavigator/>}}>
-                    <Image style={styles.startButton} source={require('../../assets/start-button.png')}/>
-                </TouchableOpacity>
+        )
+    }else{
+        return (
+            <View style={styles.mainContainer}>
+                <View style={styles.logoView}>
+                    <Image style={styles.stretch} source={require('../../assets/neo-finder-logo.png')}/>
+                </View>
+                <View style={styles.buttonView}>
+                    <TouchableOpacity onPress={()=>{props.navigation.navigate('Search')}}>
+                        <ImageBackground style={styles.startButton} source={require('../../assets/blank-button.png')}>
+                            <Text style={styles.startButtonText}>START</Text>
+                        </ImageBackground>
+                    </TouchableOpacity>
+                    
+                </View>
             </View>
-        </View>
-    );
+        );
+    }
+
+    
 }
 
 const styles = new StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: "black"
+        backgroundColor: "black",
+        alignItems: "center"
     },
     logoView: {
-        flex: 2,
-        justifyContent: "center"
+        flex: 1,
+        alignItems: 'stretch',
+        alignContent: "center",
+        width: "100%",
     },
     buttonView: {
         flex: 1,
-        alignItems: 'center'
+        alignContent: "center",
+        width: "60%",
     },
     stretch: {
         width: "100%",
-        height: "80%",
-        resizeMode: "stretch"
+        height: "100%",
+        resizeMode: "contain"
+    },
+    startButton: {
+        resizeMode: "contain",
+        height: "100%",
+        width: "100%",
+    },
+    startButtonText: {
+        fontFamily: "8-bit-Arcade-In",
+        color: "white"
     }
 })
 

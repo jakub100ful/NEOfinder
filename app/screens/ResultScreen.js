@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, View, Text, StyleSheet } from 'react-native'
+import { FlatList, View, Text, StyleSheet, Image } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useState } from 'react/cjs/react.development';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -136,12 +136,12 @@ function ResultScreen(props) {
                             </Text>
                             
                         </View>
-                        <View>
+                        <View style={styles.buttonView}>
                         <TouchableOpacity style={styles.viewButton} onPress={() => {viewOrbitNEO(item.id)}}>
-                            <Text style={styles.addButtonText}>View Orbit</Text>
+                            <Image style={styles.buttonStretch} source={require('../../assets/view-button.png')}/>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.addButton} onPress={() => {addNEO(item.id)}}>
-                            <Text style={styles.addButtonText}>Add NEO</Text>
+                            <Image style={styles.buttonStretch} source={require('../../assets/add-button.png')}/>
                         </TouchableOpacity>
 
                         </View>
@@ -158,17 +158,8 @@ function ResultScreen(props) {
 
 const styles = StyleSheet.create({
     addButton: {
-        backgroundColor: "lightblue",
-        padding: 5
     },
     viewButton: {
-        backgroundColor: "lightblue",
-        padding: 5,
-        marginBottom: 5
-    },
-    addButtonText: {
-        fontWeight: '500',
-        fontSize: 17
     },
     item: {
         padding: 10,
@@ -183,12 +174,18 @@ const styles = StyleSheet.create({
     },
     itemBodyView: {
         flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+        
     },
     errorMessageBox: {
         backgroundColor: "salmon",
         marginBottom: 10
+    },
+    buttonStretch: {
+        height: 50,
+        resizeMode: "contain"
+    },
+    buttonView: {
+        flexDirection: "row",
     }
     
 })

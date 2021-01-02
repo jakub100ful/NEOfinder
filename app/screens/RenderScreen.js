@@ -1,6 +1,6 @@
 import { useState } from "react/cjs/react.development";
 import { useEffect } from "react";
-import { Dimensions, View, Text } from 'react-native';
+import { Dimensions, View, Text, TouchableOpacity, Image } from 'react-native';
 import React, { Component } from "react";
 import * as THREE from "three";
 import ExpoTHREE from "expo-three";
@@ -152,8 +152,16 @@ export default class RenderScreen extends Component {
   render() {
     return(
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <GLView style={{ width: "100%", height: "100%", backgroundColor: "black" }} onContextCreate={this._onGLContextCreate} />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "black" }}>
+        <View style= {{flex: 1, marginTop: "7%", flexDirection: "row"}}>
+          <TouchableOpacity onPress={()=>{this.props.navigation.goBack()}}>
+              <Image source={require('../../assets/back-button.png')}/>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Search')}}>
+              <Image source={require('../../assets/add-button.png')}/>
+          </TouchableOpacity>
+        </View>
+        <GLView style={{ width: "100%", height: "100%", backgroundColor: "black", flex: 8 }} onContextCreate={this._onGLContextCreate} />
       </View>
     )
   }

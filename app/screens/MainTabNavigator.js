@@ -7,6 +7,7 @@ import SavedScreen from './SavedScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import ResultScreen from './ResultScreen';
 import RenderScreen from './RenderScreen';
+import IntroScreen from './IntroScreen';
 
 
 function MainTabNavigator(props) {
@@ -15,19 +16,27 @@ function MainTabNavigator(props) {
     const SearchStack = createStackNavigator();
 
     const SearchStackScreen = () => (
-        <SearchStack.Navigator>
-            <SearchStack.Screen name="Search" component={HomeScreen}/>
-            <SearchStack.Screen name="Results" component={ResultScreen}/>
-            <SearchStack.Screen name="Orbit" component={RenderScreen}/>
-        </SearchStack.Navigator>
+        
+        <NavigationContainer>
+            <Tab.Navigator>
+                {/* <Tab.Screen name="HomeScreen" component={SearchStackScreen}/> */}
+                <Tab.Screen name="SavedScreen" component={SavedScreen}/>
+            </Tab.Navigator>
+        </NavigationContainer>
     )
 
     return (
         <NavigationContainer>
-            <Tab.Navigator>
-                <Tab.Screen name="HomeScreen" component={SearchStackScreen}/>
-                <Tab.Screen name="SavedScreen" component={SavedScreen}/>
-            </Tab.Navigator>
+            <SearchStack.Navigator
+            screenOptions={{
+                headerShown: false
+            }}
+            >
+                <SearchStack.Screen name="Intro" component={IntroScreen}/>
+                <SearchStack.Screen name="Search" component={HomeScreen}/>
+                <SearchStack.Screen name="Results" component={ResultScreen}/>
+                <SearchStack.Screen name="Orbit" component={RenderScreen}/>
+            </SearchStack.Navigator>
         </NavigationContainer>
     );
 }

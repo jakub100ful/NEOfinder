@@ -7,7 +7,7 @@ import MainTabNavigator from './app/screens/MainTabNavigator';
 
 export default function App() {
   return (
-    <IntroScreen />
+    <MainTabNavigator />
     // <MainTabNavigator />
   );
 }
