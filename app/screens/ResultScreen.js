@@ -5,12 +5,6 @@ import { useState } from 'react/cjs/react.development';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
 
-const mockData = [
-    { id: '1', text: 'Asteroid Name' },
-    { id: '2', text: 'Asteroid Name' },
-    { id: '3', text: 'Asteroid Name!' }
-  ]
-
 const ItemSeparator = () => <View style={{
     height: 2,
     backgroundColor: "rgba(0,0,0,0.3)"
