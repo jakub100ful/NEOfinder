@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, View, Text, StyleSheet, Image } from 'react-native'
+import { FlatList, View, Text, StyleSheet, Image, SafeAreaView } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useState } from 'react/cjs/react.development';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -102,75 +102,88 @@ function ResultScreen(props) {
         <View
         style={{
         flex: 1,
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-        backgroundColor: "darkgrey"
         }}>
-            <View style={styles.errorMessageBox}>
-                <Text>{error}</Text>
-            </View>
-            <FlatList
-            data={neoList}
-            keyExtractor={item => item.id}
-            ItemSeparatorComponent={ItemSeparator}
-            renderItem={({ item }) => (
-                <View key={item.id} style={styles.item}>
-                    <Text style={styles.itemHeader}>
-                        {item.name}
+            <Image style={styles.background} source={require('../../assets/star-bg.png')}/>
+            <SafeAreaView style={styles.mainContainer}>
+                <View style={styles.titleView}>
+                    <Text style={styles.titleText}>
+                        {neoList ? 'Results ' : 'Loading'}
                     </Text>
+                </View>
+                {error && <View style={styles.errorMessageBox}>
+                    <Text>{error}</Text>
+                </View>
+                }
+                <FlatList
+                style={styles.listView}
+                data={neoList}
+                keyExtractor={item => item.id}
+                ItemSeparatorComponent={ItemSeparator}
+                renderItem={({ item }) => (
+                    <View key={item.id} style={styles.item}>
+                        <Text style={styles.itemHeader}>
+                            {item.name}
+                        </Text>
 
-                    {/* Item Body */}
-                    <View style={styles.itemBodyView}>
-                        <View>
-                            <Text style={styles.itemBodyText}>
-                            Orbiting Body: {item.close_approach_data[0].orbiting_body}
-                            </Text>
-                            <Text>
-                            Close Approach Date: {item.close_approach_data[0].close_approach_date}
-                            </Text>
-                            <Text>
-                            Miss Distance: {Math.round(item.close_approach_data[0].miss_distance.kilometers*100)/100} km
-                            </Text>
-                            <Text>
-                            Relative Velocity: {Math.round(item.close_approach_data[0].relative_velocity.kilometers_per_second*100)/100} km/s
-                            </Text>
-                            
+                        {/* Item Body */}
+                        <View style={styles.itemBodyView}>
+                            <View>
+                                <Text style={styles.itemBodyText}>
+                                Orbiting Body: {item.close_approach_data[0].orbiting_body}
+                                </Text>
+                                <Text style={styles.itemBodyText}>
+                                Close Approach Date: {item.close_approach_data[0].close_approach_date}
+                                </Text>
+                                <Text style={styles.itemBodyText}>
+                                Miss Distance: {Math.round(item.close_approach_data[0].miss_distance.kilometers*100)/100} km
+                                </Text>
+                                <Text style={styles.itemBodyText}>
+                                Relative Velocity: {Math.round(item.close_approach_data[0].relative_velocity.kilometers_per_second*100)/100} km/s
+                                </Text>
+                                
+                            </View>
+                            <View style={styles.buttonView}>
+                                <TouchableOpacity style={styles.viewButton} onPress={() => {viewOrbitNEO(item.id)}}>
+                                    <Image style={styles.buttonStretch} source={require('../../assets/view-button.png')}/>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.addButton} onPress={() => {addNEO(item.id)}}>
+                                    <Image style={styles.buttonStretch} source={require('../../assets/add-button.png')}/>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <View style={styles.buttonView}>
-                        <TouchableOpacity style={styles.viewButton} onPress={() => {viewOrbitNEO(item.id)}}>
-                            <Image style={styles.buttonStretch} source={require('../../assets/view-button.png')}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.addButton} onPress={() => {addNEO(item.id)}}>
-                            <Image style={styles.buttonStretch} source={require('../../assets/add-button.png')}/>
-                        </TouchableOpacity>
-
-                        </View>
+                        
                     </View>
                     
-                </View>
-                
-                
-            )}
-            />
+                    
+                )}
+                />
+            </SafeAreaView>
+            
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     addButton: {
+        flex: 1
     },
     viewButton: {
+        flex: 1
     },
     item: {
         padding: 10,
-        backgroundColor: "grey"
     },
     itemHeader: {
         fontWeight: '500',
-        fontSize: 20
+        fontSize: 35,
+        fontFamily: "8-bit-Arcade-In",
+        color: "white"
     },
     itemBodyText: {
-        marginTop: 5
+        marginTop: 5,
+        color: "white",
+        fontFamily: "8-bit-Arcade-In",
+        fontSize: 25
     },
     itemBodyView: {
         flex: 1,
@@ -178,7 +191,7 @@ const styles = StyleSheet.create({
     },
     errorMessageBox: {
         backgroundColor: "salmon",
-        marginBottom: 10
+        marginBottom: 10,
     },
     buttonStretch: {
         height: 50,
@@ -186,6 +199,33 @@ const styles = StyleSheet.create({
     },
     buttonView: {
         flexDirection: "row",
+        justifyContent: "flex-start",
+        padding: 10,
+        flex: 1
+    },
+    background: {
+        position: "absolute",
+        height: "100%",
+        width: "100%",
+        resizeMode: "stretch"
+    },
+    mainContainer: {
+        marginVertical: "5%",
+        marginHorizontal: "5%",
+        flex: 1
+    },
+    titleText: {
+        color: "white",
+        fontSize: 50,
+        fontFamily: "8-bit-Arcade-In"
+    },
+    titleView: {
+        alignItems: "center",
+        padding: 5
+    },
+    listView: {
+        flex: 9,
+        
     }
     
 })

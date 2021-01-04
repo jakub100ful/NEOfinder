@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Image, Text, ImageBackground } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import MainTabNavigator from './MainTabNavigator';
-import { useFonts } from 'expo-font';
+import CustomButton from '../components/CustomButton';
 
 // const starTile = require('../../assets/bg-star-tile.png');
 
@@ -31,33 +30,22 @@ import { useFonts } from 'expo-font';
 // });
 
 function IntroScreen(props) {
-    let [fontsLoaded] = useFonts({
-        '8-bit-Arcade-In': require('../../assets/fonts/8-bit-Arcade-In.ttf'),
-    })
 
-    if (!fontsLoaded) {
-        return(
-            <View>
-                <Text>Font could not be loaded.</Text>
-            </View>
-        )
-    }else{
-        return (
-            <View style={styles.mainContainer}>
+
+
+    return (
+        <View style={styles.mainContainer}>
+            <Image style={styles.background} source={require('../../assets/star-bg.png')}/>
                 <View style={styles.logoView}>
+                    
                     <Image style={styles.stretch} source={require('../../assets/neo-finder-logo.png')}/>
                 </View>
                 <View style={styles.buttonView}>
-                    <TouchableOpacity onPress={()=>{props.navigation.navigate('Search')}}>
-                        <ImageBackground style={styles.startButton} source={require('../../assets/blank-button.png')}>
-                            <Text style={styles.startButtonText}>START</Text>
-                        </ImageBackground>
-                    </TouchableOpacity>
-                    
+                    <CustomButton title="Start" callback={()=>{props.navigation.navigate('Search')}}/>
                 </View>
-            </View>
-        );
-    }
+        </View>
+    );
+    
 
     
 }
@@ -66,18 +54,17 @@ const styles = new StyleSheet.create({
     mainContainer: {
         flex: 1,
         backgroundColor: "black",
-        alignItems: "center"
+        alignItems: "stretch",
     },
     logoView: {
-        flex: 1,
+        flex: 2,
         alignItems: 'stretch',
         alignContent: "center",
         width: "100%",
     },
     buttonView: {
         flex: 1,
-        alignContent: "center",
-        width: "60%",
+        alignItems: 'center',
     },
     stretch: {
         width: "100%",
@@ -92,6 +79,12 @@ const styles = new StyleSheet.create({
     startButtonText: {
         fontFamily: "8-bit-Arcade-In",
         color: "white"
+    },
+    background: {
+        position: "absolute",
+        height: "100%",
+        width: "100%",
+        resizeMode: "stretch"
     }
 })
 

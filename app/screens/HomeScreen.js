@@ -1,11 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
-import { View, StyleSheet, Text, SafeAreaView, Button } from 'react-native';
+import { View, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { FlatList, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import moment from "moment";
-import getNEOList from '../api/api';
+import CustomButton from '../components/CustomButton';
 
 
 function HomeScreen(props) {
@@ -33,6 +33,7 @@ function HomeScreen(props) {
 
     return (
         <View style={styles.container}>
+            <Image style={styles.background} source={require('../../assets/star-bg.png')}/>
             <SafeAreaView style={styles.safeContainer}>
                 <View style={styles.topContainer}>
                     <Text style={styles.titleText}>NEO Finder</Text>
@@ -51,6 +52,7 @@ function HomeScreen(props) {
                                 value={date}
                                 onFocus={showDatePicker}
                                 />
+                                
                                 <TouchableHighlight onPress={showDatePicker}>
                                     <Ionicons name="calendar-sharp" size={24} color="black" />                                
                                 </TouchableHighlight>
@@ -64,14 +66,10 @@ function HomeScreen(props) {
                             </View>
                     </View>
                     <View style={styles.submitButton}>
-                        <TouchableHighlight onPress={() => formSubmit(date)}>
-                            <Text style={styles.submitButtonText}>Find NEOs</Text>
-                        </TouchableHighlight>
+                        <CustomButton title="FIND NEOs" callback={() => formSubmit(date)}/>
                     </View>
                     <View style={styles.neoList}>
-                        <FlatList>
-
-                        </FlatList>
+                        
                     </View>
                     
                 </View>
@@ -94,23 +92,21 @@ const styles = StyleSheet.create({
     },
     topContainer: {
         flex: 1,
-        backgroundColor: "#333945",
-        alignContent: "center",
         justifyContent: "center",
         alignItems: "center"
     },
     mainContainer: {
         flex: 8,
-        backgroundColor: "#A4B0BD",
         alignContent: "center",
         justifyContent: "center",
-        alignItems: 'center'
+        alignItems: 'stretch'
     },
     titleText: {
         flex: 1,
         color: "#3498DB",
         fontWeight: "500",
-        fontSize: 30
+        fontSize: 70,
+        fontFamily: "8-bit-Arcade-In"
     },
     formContainer: {
         flex: 1,
@@ -124,19 +120,20 @@ const styles = StyleSheet.create({
     },
     textInput: { 
         height: 40, 
-        borderColor: 'gray', 
-        borderWidth: 1, 
         flex: 6,
-        backgroundColor: "white"
+        fontFamily: "8-bit-Arcade-In",
+        fontSize: 30,
+        color: "white"
     },
     datepickerTitle: {
-        fontSize: 25,
-        fontWeight: '500'
+        fontSize: 50,
+        color: "white",
+        fontWeight: '500',
+        fontFamily: "8-bit-Arcade-In",
     },
     submitButton: {
-        backgroundColor: "#3498DB",
-        padding: "5%",
-        borderRadius: 25,
+        flex: 1,
+        alignItems: 'center',
     },
     submitButtonText: {
         fontWeight: '500',
@@ -144,6 +141,12 @@ const styles = StyleSheet.create({
     },
     neoList: {
         flex: 6,
-        backgroundColor: "white"
+        backgroundColor: "darkgrey"
+    },
+    background: {
+        position: "absolute",
+        height: "100%",
+        width: "100%",
+        resizeMode: "stretch"
     }
 })

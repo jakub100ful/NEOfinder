@@ -29,8 +29,9 @@ function MainTabNavigator(props) {
         <NavigationContainer>
             <SearchStack.Navigator
             screenOptions={{
-                headerShown: false
+                headerShown: false,
             }}
+            initialRouteName="Intro"
             >
                 <SearchStack.Screen name="Intro" component={IntroScreen}/>
                 <SearchStack.Screen name="Search" component={HomeScreen}/>
