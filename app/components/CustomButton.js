@@ -9,12 +9,17 @@ function CustomButton(props) {
         '8-bit-Arcade-In': require('../../assets/fonts/8-bit-Arcade-In.ttf'),
     });
     let [fontSize, setFontSize] = useState(55);
+    let [height, setHeight] = useState("55%");
 
     let [numberOfLines, setNumberOfLines] = useState(1);
 
     if (props.numberOfLines){
         setNumberOfLines(props.numberOfLines);
     }
+    if (props.height){
+        setHeight(props.height);
+    }
+
 
     if (!fontsLoaded) {
         return(
@@ -27,7 +32,7 @@ function CustomButton(props) {
             <View style={styles.mainView}>
                 <TouchableOpacity onPress={props.callback}>
                     <View style={styles.buttonHighlight}/>
-                    <View style={styles.buttonBody}>
+                    <View style={[styles.buttonBody, {height: height}]}>
                         <Text 
                         numberOfLines={ numberOfLines }
                         adjustsFontSizeToFit

@@ -4,6 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useState } from 'react/cjs/react.development';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
+import CustomButton from '../components/CustomButton';
 
 const mockData = [
     { id: '1', text: 'Asteroid Name' },
@@ -142,15 +143,12 @@ function ResultScreen(props) {
                                 </Text>
                                 
                             </View>
-                            <View style={styles.buttonView}>
-                                <TouchableOpacity style={styles.viewButton} onPress={() => {viewOrbitNEO(item.id)}}>
-                                    <Image style={styles.buttonStretch} source={require('../../assets/view-button.png')}/>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.addButton} onPress={() => {addNEO(item.id)}}>
-                                    <Image style={styles.buttonStretch} source={require('../../assets/add-button.png')}/>
-                                </TouchableOpacity>
-                            </View>
+                            
                         </View>
+                        <View style={styles.buttonView}>
+                                <CustomButton style={styles.viewButton} title="VIEW" callback={() => {viewOrbitNEO(item.id)}}/>
+                                <CustomButton style={styles.addButton} title="ADD" callback={() => {addNEO(item.id)}}/>
+                            </View>
                         
                     </View>
                     
@@ -171,7 +169,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     item: {
-        padding: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.15)'
     },
     itemHeader: {
         fontWeight: '500',
@@ -187,7 +185,6 @@ const styles = StyleSheet.create({
     },
     itemBodyView: {
         flex: 1,
-        
     },
     errorMessageBox: {
         backgroundColor: "salmon",
@@ -200,8 +197,7 @@ const styles = StyleSheet.create({
     buttonView: {
         flexDirection: "row",
         justifyContent: "flex-start",
-        padding: 10,
-        flex: 1
+        flex: 1,
     },
     background: {
         position: "absolute",
