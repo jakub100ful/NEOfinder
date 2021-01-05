@@ -1,16 +1,12 @@
 import React from 'react'
-import { FlatList, View, Text, StyleSheet, Image, SafeAreaView } from 'react-native'
+import { FlatList, View, Text, StyleSheet, Image, SafeAreaView, Button } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useState } from 'react/cjs/react.development';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
 import CustomButton from '../components/CustomButton';
 
-const mockData = [
-    { id: '1', text: 'Asteroid Name' },
-    { id: '2', text: 'Asteroid Name' },
-    { id: '3', text: 'Asteroid Name!' }
-  ]
+
 
 const ItemSeparator = () => <View style={{
     height: 2,
@@ -21,28 +17,48 @@ const getAllData = () =>{
     AsyncStorage.getAllKeys().then((keys) => {
       return AsyncStorage.multiGet(keys)
         .then((result) => {
-          console.log(JSON.parse(result));
+          console.log(JSON.stringify(result));
         }).catch((e) =>{
           console.log(e);
         });
     });
   }
 
+const clearAsyncStorage = async() => {
+    AsyncStorage.clear();
+}
+
+
 const addNEO = (addedNEO) =>{
     try {
         AsyncStorage
         .getItem('userAddedNEOList')
         .then(addedList => {
-            const tempList = addedList == null ? [] : JSON.parse(addedList)
-            addedList.forEach(object, index => {
-                if (object.id === addedNEO){
-                    tempList.splice(index, 1);
-                    return AsyncStorage.setItem('userAddedNEOList', JSON.stringify(tempList))
-                }else{
+            const parsedList = addedList == null ? [] : JSON.parse(addedList);
+            const tempList = parsedList;
+            let matchNotFound = true;
+            
+            // List is already empty, no need to check for existing keys
+            if(!parsedList){
+                tempList.push({'id': addedNEO})
+                return AsyncStorage.setItem('userAddedNEOList', JSON.stringify(tempList))
+
+            // List is populated, and therefore needs to be iterated through to avoid duplicate keys
+            }else{
+                parsedList.forEach((object, index) => {
+                    // If a match is found, it removes the existing key
+                    if (object.id === addedNEO){
+                        matchNotFound = false;
+                        tempList.splice(index, 1);
+                        return AsyncStorage.setItem('userAddedNEOList', JSON.stringify(tempList))
+                    }
+                });
+                // If no match is found, it is safe to add the key to the array
+                if (matchNotFound){
                     tempList.push({'id': addedNEO})
-                    return AsyncStorage.setItem('userAddedNEOList', JSON.stringify(tempList))
+                    return AsyncStorage.setItem('userAddedNEOList', JSON.stringify(tempList));
                 }
-            });
+            }
             
         })
     } catch (e) {
@@ -58,8 +74,15 @@ function ResultScreen(props) {
     const [date, setDate] = useState(props.route.params.date);
     const [neoList, setNeoList] = useState(null);
     const [error, setError] = useState(null)
+    const [isInFavourites, setIsInFavourites] = useState(false);
 
     useEffect(() => {
+        if(!AsyncStorage.getItem('userAddedNEOList')){
+            AsyncStorage.setItem('userAddedNEOList', []);
+        }
+
+       
+
         // API Fetch Call
         if(neoList == null){
             console.log("NEO Fetched");
@@ -95,6 +118,27 @@ function ResultScreen(props) {
         }
     })   
 
+    const determineButton = (NEOid) => {
+        try{
+            AsyncStorage
+            .getItem('userAddedNEOList')
+            .then(favouritesList => {
+                const parsedList = favouritesList == null ? [] : JSON.parse(favouritesList);
+                setIsInFavourites(false);
+                if(parsedList){
+                    parsedList.forEach((favourite)=>{
+                        if (favourite.id === NEOid){
+                            console.log("Found match");
+                            setIsInFavourites(true);
+                        }
+                    })
+                }
+            })
+        }catch{
+            console.log(e);
+        }
+    }
+
     const viewOrbitNEO = (NEOspk) => {
         props.navigation.navigate('Orbit', {spk: NEOspk});
     }
@@ -110,6 +154,9 @@ function ResultScreen(props) {
                     <Text style={styles.titleText}>
                         {neoList ? 'Results ' : 'Loading'}
                     </Text>
+                    <Button title="Clear" onPress={()=>{clearAsyncStorage()}} />
+                    <Button title="Get Favourites" onPress={()=>{getAllData()}} />
+
                 </View>
                 {error && <View style={styles.errorMessageBox}>
                     <Text>{error}</Text>
@@ -120,7 +167,9 @@ function ResultScreen(props) {
                 data={neoList}
                 keyExtractor={item => item.id}
                 ItemSeparatorComponent={ItemSeparator}
-                renderItem={({ item }) => (
+                renderItem={({ item }) => {
+                determineButton(item.id);
+                (
                     <View key={item.id} style={styles.item}>
                         <Text style={styles.itemHeader}>
                             {item.name}
@@ -146,14 +195,15 @@ function ResultScreen(props) {
                             
                         </View>
                         <View style={styles.buttonView}>
+                                
                                 <CustomButton style={styles.viewButton} title="VIEW" callback={() => {viewOrbitNEO(item.id)}}/>
-                                <CustomButton style={styles.addButton} title="ADD" callback={() => {addNEO(item.id)}}/>
+                                <CustomButton style={styles.addButton} title={isInFavourites ? "REMOVE" : "ADD"} callback={() => {addNEO(item.id)}}/>
                             </View>
                         
                     </View>
                     
                     
-                )}
+                )}}
                 />
             </SafeAreaView>
             
