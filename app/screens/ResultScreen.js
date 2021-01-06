@@ -73,15 +73,25 @@ function ResultScreen(props) {
     const apiKey = "R3aOcYecyMfmnmoOL17jBY0ohDkk5o3e73j4O8BX";
     const [date, setDate] = useState(props.route.params.date);
     const [neoList, setNeoList] = useState(null);
-    const [error, setError] = useState(null)
-    const [isInFavourites, setIsInFavourites] = useState(false);
+    const [error, setError] = useState(null);
+    const [favList, setFavList] = useState(null);
+
+    //const [isInFavourites, setIsInFavourites] = useState(false);
+
+    const favouriteListSetter = async () => {
+        AsyncStorage.getItem('userAddedNEOList')
+        .then((favouritesList)=>{
+            const parsedList = favouritesList == null ? [] : JSON.parse(favouritesList);
+            setFavList(parsedList);
+        })
+    }
 
     useEffect(() => {
         if(!AsyncStorage.getItem('userAddedNEOList')){
             AsyncStorage.setItem('userAddedNEOList', []);
         }
 
-       
+        favouriteListSetter();
 
         // API Fetch Call
         if(neoList == null){
@@ -116,27 +126,38 @@ function ResultScreen(props) {
                 console.log(error);
             }
         }
-    })   
+    }, [])   
 
     const determineButton = (NEOid) => {
-        try{
-            AsyncStorage
-            .getItem('userAddedNEOList')
-            .then(favouritesList => {
-                const parsedList = favouritesList == null ? [] : JSON.parse(favouritesList);
-                setIsInFavourites(false);
-                if(parsedList){
-                    parsedList.forEach((favourite)=>{
-                        if (favourite.id === NEOid){
-                            console.log("Found match");
-                            setIsInFavourites(true);
-                        }
-                    })
+        let isInFavourites = false;
+        if(favList){
+            favList.forEach((favourite)=>{
+                if (favourite.id === NEOid){
+                    console.log("Found match");
+                    isInFavourites = true;
                 }
             })
-        }catch{
-            console.log(e);
         }
+
+        return isInFavourites;
+        
+        // try{
+        //     const favouritesList = await AsyncStorage.getItem('userAddedNEOList');
+        //     const parsedList = favouritesList == null ? [] : JSON.parse(favouritesList);
+        //     let isInFavourites = false;
+            
+        //     if(parsedList){
+        //         parsedList.forEach((favourite)=>{
+        //             if (favourite.id === NEOid){
+        //                 console.log("Found match");
+        //                 isInFavourites = true;
+        //             }
+        //         })
+        //     }
+        //     return isInFavourites;
+        // }catch(e){
+        //     console.log("Promise Error: ",e);
+        // }
     }
 
     const viewOrbitNEO = (NEOspk) => {
@@ -167,8 +188,8 @@ function ResultScreen(props) {
                 data={neoList}
                 keyExtractor={item => item.id}
                 ItemSeparatorComponent={ItemSeparator}
-                renderItem={({ item }) => {
-                determineButton(item.id);
+                renderItem={({ item }) => 
+                
                 (
                     <View key={item.id} style={styles.item}>
                         <Text style={styles.itemHeader}>
@@ -195,15 +216,14 @@ function ResultScreen(props) {
                             
                         </View>
                         <View style={styles.buttonView}>
-                                
                                 <CustomButton style={styles.viewButton} title="VIEW" callback={() => {viewOrbitNEO(item.id)}}/>
-                                <CustomButton style={styles.addButton} title={isInFavourites ? "REMOVE" : "ADD"} callback={() => {addNEO(item.id)}}/>
+                                <CustomButton style={styles.addButton} title={determineButton(item.id) ? "REMOVE" : "ADD"} callback={() => {addNEO(item.id)}}/>
                             </View>
                         
                     </View>
                     
                     
-                )}}
+                )}
                 />
             </SafeAreaView>
             
