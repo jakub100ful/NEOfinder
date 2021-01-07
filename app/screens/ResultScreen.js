@@ -13,6 +13,9 @@ const ItemSeparator = () => <View style={{
     backgroundColor: "rgba(0,0,0,0.3)"
 }} />
 
+/**
+     * Prints all data within AsyncStorage.
+     */
 const getAllData = () =>{
     AsyncStorage.getAllKeys().then((keys) => {
       return AsyncStorage.multiGet(keys)
@@ -28,47 +31,6 @@ const clearAsyncStorage = async() => {
     AsyncStorage.clear();
 }
 
-
-const addNEO = (addedNEO) =>{
-    try {
-        AsyncStorage
-        .getItem('userAddedNEOList')
-        .then(addedList => {
-            const parsedList = addedList == null ? [] : JSON.parse(addedList);
-            const tempList = parsedList;
-            let matchNotFound = true;
-            
-            // List is already empty, no need to check for existing keys
-            if(!parsedList){
-                tempList.push({'id': addedNEO})
-                return AsyncStorage.setItem('userAddedNEOList', JSON.stringify(tempList))
-
-            // List is populated, and therefore needs to be iterated through to avoid duplicate keys
-            }else{
-                parsedList.forEach((object, index) => {
-                    // If a match is found, it removes the existing key
-                    if (object.id === addedNEO){
-                        matchNotFound = false;
-                        tempList.splice(index, 1);
-                        return AsyncStorage.setItem('userAddedNEOList', JSON.stringify(tempList))
-                    }
-                });
-                // If no match is found, it is safe to add the key to the array
-                if (matchNotFound){
-                    tempList.push({'id': addedNEO})
-                    return AsyncStorage.setItem('userAddedNEOList', JSON.stringify(tempList));
-                }
-            }
-            
-        })
-    } catch (e) {
-        console.log(e);
-    }
-    getAllData();
-};
-
-
-
 function ResultScreen(props) {
     const apiKey = "R3aOcYecyMfmnmoOL17jBY0ohDkk5o3e73j4O8BX";
     const [date, setDate] = useState(props.route.params.date);
@@ -76,12 +38,66 @@ function ResultScreen(props) {
     const [error, setError] = useState(null);
     const [favList, setFavList] = useState(null);
 
-    //const [isInFavourites, setIsInFavourites] = useState(false);
 
+    /**
+     * Takes an id of a Near Earth Object and adds or removes it from the favourites list.
+     * @param {string} NEOid - Identifier for the NEO to be added/removed
+     */
+    const handleNEOFavouriteState = (NEOid) =>{
+        try {
+            console.log("Type of fav list is: ",typeof favList);
+            const parsedList = favList == null ? [] : favList;
+            const tempList = parsedList;
+            let matchFound = false;
+            console.log("Parsed list: ",parsedList);
+            
+            // List is already empty, no need to check for existing keys
+            if (parsedList === undefined || parsedList.length == 0) {
+                console.log("List is empty. Adding the id. Parsed list: ",parsedList);
+                console.log("Type of TempList: ",typeof(tempList));
+                tempList.push(NEOid);
+                AsyncStorage.setItem('userAddedNEOList', JSON.stringify(tempList));
+                setFavList(tempList);
+            // List is populated, and therefore needs to be iterated through to avoid duplicate keys
+            }else{
+                console.log(typeof parsedList);
+                for (let i = 0; i < parsedList.length; i++){
+                    // If a match is found, it removes the existing key
+                    console.log("NEO ID Currently in the list: ",parsedList[i], "Added NEO id:",NEOid)
+                    if (parsedList[i] === NEOid){
+                        console.log("Match found, removing existing key");
+                        matchFound = true;
+                        tempList.splice(i, 1);
+                        AsyncStorage.setItem('userAddedNEOList', JSON.stringify(tempList));
+                        setFavList(tempList);
+                        break;
+                    }
+                }
+
+                // If no match is found, it is safe to add the key to the array
+                if (!matchFound){
+                    console.log("Match not found, key added",tempList);
+                    tempList.push(NEOid);
+                    AsyncStorage.setItem('userAddedNEOList', JSON.stringify(tempList));
+                    setFavList(tempList);
+                }
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+        console.log("Fav List (State):",favList);
+        getAllData();
+    };
+
+
+    /**
+     * Fetches the most up to date favourite list and saves it to a local state hook
+     */
     const favouriteListSetter = async () => {
         AsyncStorage.getItem('userAddedNEOList')
         .then((favouritesList)=>{
-            const parsedList = favouritesList == null ? [] : JSON.parse(favouritesList);
+            const parsedList = favouritesList == null ? [] : JSON.parse(favouritesList).map((NEO) => {return NEO});
             setFavList(parsedList);
         })
     }
@@ -128,38 +144,32 @@ function ResultScreen(props) {
         }
     }, [])   
 
-    const determineButton = (NEOid) => {
+
+    /**
+     * Takes an id of a Near Earth Object and returns a boolean based on whether it is in favourites
+     * @param {string} NEOid - Identifier for the NEO to be looked up in favourites
+     * @return {boolean} Boolean result
+     */
+    const NEOisInFavourites = (NEOid) => {
         let isInFavourites = false;
-        if(favList){
-            favList.forEach((favourite)=>{
-                if (favourite.id === NEOid){
-                    console.log("Found match");
+        const tempList = favList == null ? [] : favList;
+
+        if (tempList != undefined || tempList.length != 0) {
+            for (let favourite of tempList){
+                if (favourite === NEOid){
                     isInFavourites = true;
+                    break;
                 }
-            })
+            }
         }
 
         return isInFavourites;
-        
-        // try{
-        //     const favouritesList = await AsyncStorage.getItem('userAddedNEOList');
-        //     const parsedList = favouritesList == null ? [] : JSON.parse(favouritesList);
-        //     let isInFavourites = false;
-            
-        //     if(parsedList){
-        //         parsedList.forEach((favourite)=>{
-        //             if (favourite.id === NEOid){
-        //                 console.log("Found match");
-        //                 isInFavourites = true;
-        //             }
-        //         })
-        //     }
-        //     return isInFavourites;
-        // }catch(e){
-        //     console.log("Promise Error: ",e);
-        // }
     }
 
+    /**
+     * Takes an id of a Near Earth Object and navigates to the Orbit screen to preview the NEO's orbit
+     * @param {string} NEOspk - Identifier for the NEO to be previewed. This is passed to the new screen through the navigation prop.
+     */
     const viewOrbitNEO = (NEOspk) => {
         props.navigation.navigate('Orbit', {spk: NEOspk});
     }
@@ -188,6 +198,7 @@ function ResultScreen(props) {
                 data={neoList}
                 keyExtractor={item => item.id}
                 ItemSeparatorComponent={ItemSeparator}
+                refreshing={true}
                 renderItem={({ item }) => 
                 
                 (
@@ -217,7 +228,7 @@ function ResultScreen(props) {
                         </View>
                         <View style={styles.buttonView}>
                                 <CustomButton style={styles.viewButton} title="VIEW" callback={() => {viewOrbitNEO(item.id)}}/>
-                                <CustomButton style={styles.addButton} title={determineButton(item.id) ? "REMOVE" : "ADD"} callback={() => {addNEO(item.id)}}/>
+                                <CustomButton style={styles.addButton} title={NEOisInFavourites(item.id) ? "REMOVE" : "ADD"} callback={() => {handleNEOFavouriteState(item.id)}}/>
                             </View>
                         
                     </View>
@@ -233,10 +244,10 @@ function ResultScreen(props) {
 
 const styles = StyleSheet.create({
     addButton: {
-        flex: 1
+        flex: 1,
     },
     viewButton: {
-        flex: 1
+        flex: 1,
     },
     item: {
         backgroundColor: 'rgba(255, 255, 255, 0.15)'
