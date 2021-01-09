@@ -1,17 +1,18 @@
-import React from 'react';
+import React, {useContext} from 'react'
 import { useState } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { FlatList, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import { TextInput, TouchableHighlight } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import moment from "moment";
 import CustomButton from '../components/CustomButton';
-
+import { UserContext } from '../provider/UserProvider';
 
 function HomeScreen(props) {
     
     const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    //const user = useContext(UserContext);
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
