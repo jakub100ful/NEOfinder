@@ -36,8 +36,8 @@ function Item(props) {
                 
             </View>
             <View style={styles.buttonView}>
-                    <CustomButton style={styles.viewButton} title="VIEW" callback={() => {viewOrbitNEO(item.id)}}/>
-                    <CustomButton style={styles.addButton} title={item.isInFavourites ? "REMOVE" : "ADD"} callback={() => {user.handleFavouriteListChange(item)}}/>
+                    <CustomButton style={styles.viewButton} title="VIEW" callback={() => {props.function(item)}}/>
+                    <CustomButton style={styles.addButton} title={item.isInFavourites ? "REMOVE" : "ADD"} callback={() => {user.handleNEOFavouritesListChange(item)}}/>
                 </View>
             
         </View>

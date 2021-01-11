@@ -27,7 +27,7 @@ export default class OrbitView extends Component {
     // Defining the scene, camera and renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(120, this.state.width/this.state.height, 0.1, 1000);
-    camera.position.set(2, 5, 150);
+    camera.position.set(50, 5, 70);
     this.setState({camera: camera})
     const renderer = new ExpoTHREE.Renderer({ gl });
     renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
@@ -42,7 +42,7 @@ export default class OrbitView extends Component {
 
     star = new THREE.Mesh(
       new THREE.SphereBufferGeometry(20, 32, 32),
-      new THREE.MeshBasicMaterial({map: await ExpoTHREE.loadAsync(require("../../assets/sun-texture.jpg"))})
+      new THREE.MeshBasicMaterial({map: await ExpoTHREE.loadAsync(require("../../assets/earth-texture.jpg"))})
     ),
     glows = [];
 
@@ -51,8 +51,8 @@ export default class OrbitView extends Component {
     // EARTH
     
     let planetGeom = new THREE.Mesh(
-      new THREE.SphereBufferGeometry(5, 32, 32),
-      new THREE.MeshBasicMaterial({map: await ExpoTHREE.loadAsync(require("../../assets/earth-texture.jpg"))})
+      new THREE.SphereBufferGeometry(5, 3, 10),
+      new THREE.MeshBasicMaterial({map: await ExpoTHREE.loadAsync(require("../../assets/asteroid-texture-1.jpg"))})
     ),
     planet = new THREE.Object3D();
 
@@ -126,9 +126,8 @@ export default class OrbitView extends Component {
   render() {
     return(
       
-      <OrbitControlsView camera={this.state.camera}>
           <GLView style={{ width: "100%", height: "100%", backgroundColor: "black", flex: 8 }} onContextCreate={this._onGLContextCreate} />
-          </OrbitControlsView>
+
     )
   }
 }

@@ -7,12 +7,12 @@ import { Ionicons } from '@expo/vector-icons';
 import moment from "moment";
 import CustomButton from '../components/CustomButton';
 import { UserContext } from '../provider/UserProvider';
+import CustomInput from '../components/CustomInput';
 
 function HomeScreen(props) {
     
     const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    //const user = useContext(UserContext);
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -47,6 +47,7 @@ function HomeScreen(props) {
                             {/* Datepicker */}
                             <Text style={styles.datepickerTitle}>Enter Date</Text>
                             <View style={styles.datepickerView}>
+                                {/* <CustomInput value={date} callback={showDatePicker}/> */}
                                 <TextInput
                                 style={styles.textInput}
                                 //onChangeText={text => onChangeText(text)}

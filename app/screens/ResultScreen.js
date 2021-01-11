@@ -51,14 +51,13 @@ function ResultScreen(props) {
     }, [])   
 
 
-    
-
     /**
      * Takes an id of a Near Earth Object and navigates to the Orbit screen to preview the NEO's orbit
-     * @param {string} NEOspk - Identifier for the NEO to be previewed. This is passed to the new screen through the navigation prop.
+     * @param {object} NEO - NEO object to be previewed. This is passed to the new screen through the navigation prop.
      */
-    const viewOrbitNEO = (NEOspk) => {
-        props.navigation.navigate('Orbit', {spk: NEOspk});
+    const viewOrbitNEO = (NEO) => {
+        console.log(NEO);
+        props.navigation.navigate('Orbit', {NEO: NEO});
     }
 
     return (
@@ -86,7 +85,7 @@ function ResultScreen(props) {
                 keyExtractor={item => item.id}
                 ItemSeparatorComponent={ItemSeparator}
                 refreshing={true}
-                renderItem={({item})=><Item item={item}/>}
+                renderItem={({item})=><Item item={item} function={viewOrbitNEO}/>}
                 />
             </SafeAreaView>
             

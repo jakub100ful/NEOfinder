@@ -1,5 +1,3 @@
-import saveFavouritesToStore from "./saveFavouritesToStore";
-
 /**
  * Takes a Near Earth Object item and adds or removes it from the favourites list.
  * @param {object} NEO - Identifier for the NEO to be added/removed
