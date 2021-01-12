@@ -2,10 +2,34 @@ import React from 'react';
 import { StyleSheet, View, Image, Text, ImageBackground } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import CustomButton from '../components/CustomButton';
-
+import { Audio } from 'expo-av';
 
 
 function IntroScreen(props) {
+    const [sound, setSound] = React.useState();
+
+    async function playSound() {
+        console.log('Loading Sound');
+        const { sound } = await Audio.Sound.createAsync(
+           require('../../assets/sounds/button-click-sound.wav')
+        );
+        setSound(sound);
+    
+        console.log('Playing Sound');
+        await sound.playAsync(); }
+    
+      React.useEffect(() => {
+        return sound
+          ? () => {
+              console.log('Unloading Sound');
+              sound.unloadAsync(); }
+          : undefined;
+      }, [sound]);
+
+    function onStartButtonPress() {
+        playSound();
+        props.navigation.navigate('Search');
+    }
 
     return (
         <View style={styles.mainContainer}>
@@ -15,7 +39,7 @@ function IntroScreen(props) {
                     <Image style={styles.stretch} source={require('../../assets/neo-finder-logo.png')}/>
                 </View>
                 <View style={styles.buttonView}>
-                    <CustomButton title="Start" callback={()=>{props.navigation.navigate('Search')}}/>
+                    <CustomButton title="Start" callback={()=>{onStartButtonPress()}}/>
                 </View>
         </View>
     );
