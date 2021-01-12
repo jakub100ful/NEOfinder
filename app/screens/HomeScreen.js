@@ -8,11 +8,13 @@ import moment from "moment";
 import CustomButton from '../components/CustomButton';
 import { UserContext } from '../provider/UserProvider';
 import CustomInput from '../components/CustomInput';
+import FavouritesModal from '../components/FavouritesModal';
 
 function HomeScreen(props) {
     
     const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [modalVisibility, setModalVisibility] = useState(false);
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -30,6 +32,11 @@ function HomeScreen(props) {
 
     const formSubmit = (date) => {
         props.navigation.navigate('Results', {date: date});
+    }
+
+    const toggleModalVisibility = () => {
+        const newState = !modalVisibility;
+        setModalVisibility(newState);
     }
 
     return (
@@ -71,7 +78,10 @@ function HomeScreen(props) {
                         <CustomButton title="FIND NEOs" callback={() => formSubmit(date)}/>
                     </View>
                     <View style={styles.neoList}>
-                        
+                        {modalVisibility && <FavouritesModal callback={() => toggleModalVisibility()} />}
+                        <View style={styles.modalButton}>
+                            <CustomButton title="VIEW FAVOURITES" callback={() => toggleModalVisibility()}/>
+                        </View>
                     </View>
                     
                 </View>
@@ -142,13 +152,17 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     neoList: {
-        flex: 6,
-        backgroundColor: "darkgrey"
+        flex: 7,
+        backgroundColor: "darkgrey",
+        justifyContent: "center"
     },
     background: {
         position: "absolute",
         height: "100%",
         width: "100%",
         resizeMode: "stretch"
+    },
+    modalButton: {
+        flex: 1,
     }
 })
