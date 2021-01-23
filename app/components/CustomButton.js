@@ -77,8 +77,7 @@ const styles = new StyleSheet.create({
         fontSize: 55,
     },
     mainView: {
-        width: "60%",
-        height: "100%",
+        flex:1
     }
 })
 

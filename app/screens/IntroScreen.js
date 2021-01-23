@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, Text, ImageBackground } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet, View, Image } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import { Audio } from 'expo-av';
 
@@ -39,7 +38,9 @@ function IntroScreen(props) {
                     <Image style={styles.stretch} source={require('../../assets/neo-finder-logo.png')}/>
                 </View>
                 <View style={styles.buttonView}>
-                    <CustomButton title="Start" callback={()=>{onStartButtonPress()}}/>
+                    <View style={{width: "60%", height: "100%"}}>
+                        <CustomButton title="Start" callback={()=>{onStartButtonPress()}}/>
+                    </View>
                 </View>
         </View>
     );

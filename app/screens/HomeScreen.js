@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import { useState } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -6,9 +6,8 @@ import { TextInput, TouchableHighlight } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import moment from "moment";
 import CustomButton from '../components/CustomButton';
-import { UserContext } from '../provider/UserProvider';
-import CustomInput from '../components/CustomInput';
 import FavouritesModal from '../components/FavouritesModal';
+import ClockStyleDateInput from '../components/ClockStyleDateInput';
 
 function HomeScreen(props) {
     
@@ -16,33 +15,49 @@ function HomeScreen(props) {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [modalVisibility, setModalVisibility] = useState(false);
 
+    // Sets Datepicker to Visible
     const showDatePicker = () => {
         setDatePickerVisibility(true);
     };
 
+    // Sets Datepicker to Invisible
     const hideDatePicker = () => {
         setDatePickerVisibility(false);
     };
 
+    /**
+     * Confirms the date selection from a datepicker by saving it to the state
+     * @param {date} selectedDate - Selected date 
+     */
     const handleConfirm = (selectedDate) => {
         const currentDate = selectedDate || date;
         setDate(moment(currentDate).format("YYYY-MM-DD"));
         hideDatePicker();
     };
 
+    /**
+     * Takes in date and navigates to the results page to query that date
+     * @param {date} date - A date for the NEO search
+     */
     const formSubmit = (date) => {
         props.navigation.navigate('Results', {date: date});
     }
 
+    // Toggles visibility of modal
     const toggleModalVisibility = () => {
         const newState = !modalVisibility;
         setModalVisibility(newState);
     }
-
+    
     return (
         <View style={styles.container}>
+            {/* Background covers entire screen */}
             <Image style={styles.background} source={require('../../assets/star-bg.png')}/>
+            
+            {/* Workable area */}
             <SafeAreaView style={styles.safeContainer}>
+
+                {/* Title Container - contains screen title */}
                 <View style={styles.topContainer}>
                     <Text style={styles.titleText}>NEO Finder</Text>
                 </View>
@@ -50,33 +65,30 @@ function HomeScreen(props) {
                  {/* Body of the screen */}
                 <View style={styles.mainContainer}>
                     <View style={styles.formContainer}>
-                        <View>
+
                             {/* Datepicker */}
                             <Text style={styles.datepickerTitle}>Enter Date</Text>
                             <View style={styles.datepickerView}>
-                                {/* <CustomInput value={date} callback={showDatePicker}/> */}
-                                <TextInput
-                                style={styles.textInput}
-                                //onChangeText={text => onChangeText(text)}
-                                value={date}
-                                onFocus={showDatePicker}
+                                <ClockStyleDateInput 
+                                    value={date}
+                                    onFocus={showDatePicker}
                                 />
-                                
-                                <TouchableHighlight onPress={showDatePicker}>
-                                    <Ionicons name="calendar-sharp" size={24} color="black" />                                
-                                </TouchableHighlight>
+
                             </View>
+
                                 <DateTimePickerModal
                                     isVisible={isDatePickerVisible}
                                     mode="date"
                                     onConfirm={handleConfirm}
                                     onCancel={hideDatePicker}
                                 />
+
                             </View>
-                    </View>
+
                     <View style={styles.submitButton}>
                         <CustomButton title="FIND NEOs" callback={() => formSubmit(date)}/>
                     </View>
+
                     <View style={styles.neoList}>
                         {modalVisibility && <FavouritesModal callback={() => toggleModalVisibility()} />}
                         <View style={styles.modalButton}>
@@ -129,13 +141,7 @@ const styles = StyleSheet.create({
     datepickerView: {
         flex: 1,
         flexDirection: 'row',
-    },
-    textInput: { 
-        height: 40, 
-        flex: 6,
-        fontFamily: "8-bit-Arcade-In",
-        fontSize: 30,
-        color: "white"
+        backgroundColor: "blue"
     },
     datepickerTitle: {
         fontSize: 50,
@@ -146,10 +152,6 @@ const styles = StyleSheet.create({
     submitButton: {
         flex: 1,
         alignItems: 'center',
-    },
-    submitButtonText: {
-        fontWeight: '500',
-        fontSize: 20
     },
     neoList: {
         flex: 7,

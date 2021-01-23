@@ -5,24 +5,28 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-  View
+  View,
+  FlatList
 } from "react-native";
 import { UserContext } from "../provider/UserProvider";
 import fetchNEOFavourites from '../functions/fetchNEOFavourites';
+import ItemSeparator from '../components/ItemSeparator';
+import FavouriteItem from '../components/FavouriteItem';
+import CustomButton from "./CustomButton";
 
 
 export default function FavouritesModal(props) {
     const user = useContext(UserContext);
-    const [NEOdataList, setNEOdataList] = useState([]);
+    const [NEOdataList, setNEOdataList] = useState(null);
 
     useEffect(() => {
-        if(NEOdataList != []){
+        if(NEOdataList == null){
             const fetchFavourites = async () => {
-                const result = await fetchNEOFavourites(user.NEOFavouritesList).then((list)=>{return list});
+                const result = await fetchNEOFavourites(user.NEOFavouritesList).then(data => {return data});
+                console.log("RESULT",result);
                 setNEOdataList(result);
             }
             fetchFavourites();
-            console.log(NEOdataList);
         }
     },[])
 
@@ -38,16 +42,30 @@ export default function FavouritesModal(props) {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
+            <Text style={styles.modalText}>Saved NEOs</Text>
 
-            <TouchableHighlight
-              style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-              onPress={() => {
-                props.callback()
-              }}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </TouchableHighlight>
+            {/* List of favourite NEOs */}
+            <View style={{flex: 10, width: "100%", height: "100%"}}>
+              <FlatList
+                style={styles.listView}
+                data={NEOdataList}
+                keyExtractor={item => item.id}
+                ItemSeparatorComponent={ItemSeparator}
+                refreshing={true}
+                renderItem={({item})=><FavouriteItem item={item}/>}
+              />
+            </View>
+
+            {/* Close Button */}
+            <View style={{flex: 1}}>
+              <CustomButton 
+                title="CLOSE"
+                callback={() => {
+                  props.callback()
+                }}
+              />
+            </View>
+            
           </View>
         </View>
       </Modal>
@@ -64,9 +82,8 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
+    backgroundColor: "#1d1135",
+    borderRadius: 3,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -75,7 +92,9 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
+    elevation: 5,
+    width: "90%",
+    height: "80%"
   },
   openButton: {
     backgroundColor: "#F194FF",
@@ -89,7 +108,13 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   modalText: {
-    marginBottom: 15,
-    textAlign: "center"
+    margin: 15,
+    textAlign: "center",
+    fontFamily: "8-bit-Arcade-In",
+    fontSize: 50,
+    color: "#ba1e68",
+  },
+  listView: {
+    backgroundColor: "purple"
   }
 });
