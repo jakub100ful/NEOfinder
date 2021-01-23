@@ -10,6 +10,8 @@ function CustomButton(props) {
     });
     let [fontSize, setFontSize] = useState(55);
     let [height, setHeight] = useState("55%");
+    let [customStyle, setCustomStyle] = useState(props.style);
+
 
     let [numberOfLines, setNumberOfLines] = useState(1);
 
@@ -29,7 +31,7 @@ function CustomButton(props) {
         );
     }else{
         return (
-            <View style={styles.mainView}>
+            <View style={[styles.mainView, customStyle]}>
                 <TouchableOpacity onPress={props.callback}>
                     <View style={styles.buttonHighlight}/>
                     <View style={[styles.buttonBody, {height: height}]}>
@@ -77,7 +79,7 @@ const styles = new StyleSheet.create({
         fontSize: 55,
     },
     mainView: {
-        flex:1
+        flex:1,
     }
 })
 

@@ -21,9 +21,13 @@ function FavouriteItem(props) {
             </View>
 
             {/* Buttons */}
-            <View style={styles.itemButtonContainer}>
+            <View style={styles.itemButtonWrapper}>
+                <View style={styles.itemViewButtonContainer}>
                     <CustomButton style={styles.viewButton} title="VIEW" callback={() => {props.function(item)}}/>
+                </View>
+                <View style={styles.itemAddButtonContainer}>
                     <CustomButton style={styles.addButton} title={item.isInFavourites ? "REMOVE" : "ADD"} callback={() => {user.handleNEOFavouritesListChange(item)}}/>
+                </View>
             </View>
             
         </View>
@@ -51,21 +55,28 @@ const styles = StyleSheet.create({
     },
     itemNameText: {
         marginTop: 5,
-        color: "white",
+        color: "black",
         fontFamily: "8-bit-Arcade-In",
-        fontSize: 35
+        fontSize: 40
     },
     itemNameContainer: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center"
     },
-    itemButtonContainer: {
+    itemButtonWrapper: {
         flexDirection: "row",
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "black"
+        justifyContent: "space-around",
+        alignItems: "center"
+    },
+    itemAddButtonContainer: {
+        width: "45%",
+        height: "80%"
+    },
+    itemViewButtonContainer: {
+        width: "45%",
+        height: "80%"
     }
     
 })

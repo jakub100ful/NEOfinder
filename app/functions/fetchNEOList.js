@@ -6,7 +6,6 @@ const apiKey = "R3aOcYecyMfmnmoOL17jBY0ohDkk5o3e73j4O8BX";
  * Fetches the NEO list for given date
  * @param {date} date - Date to be queried
  * @param {object} context - Context containing the global state hook for the favourite list
- * @param {function callback(returnedList) { return returnedList }} - A callback to return the list
  */
 const fetchNEOList = async (date, context) => {
     let error = "";

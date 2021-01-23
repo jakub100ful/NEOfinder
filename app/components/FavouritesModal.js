@@ -57,7 +57,7 @@ export default function FavouritesModal(props) {
             </View>
 
             {/* Close Button */}
-            <View style={{flex: 1}}>
+            <View style={styles.closeButtonWrapper}>
               <CustomButton 
                 title="CLOSE"
                 callback={() => {
@@ -116,5 +116,10 @@ const styles = StyleSheet.create({
   },
   listView: {
     backgroundColor: "purple"
+  },
+  closeButtonWrapper: {
+    flex: 0.7, 
+    flexDirection: "row",
+    backgroundColor: "white",
   }
 });

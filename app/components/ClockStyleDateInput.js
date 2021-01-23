@@ -11,6 +11,7 @@ export default function ClockStyleDateInput(props) {
     });
     let [date, setDate] = useState(null);
     let [dateList, setDateList] = useState(null);
+    let [customStyle, setCustomStyle] = useState(props.style);
 
     useEffect(() => {
         if (props.value != null){
@@ -29,7 +30,7 @@ export default function ClockStyleDateInput(props) {
         );
     }else{
     return (
-        <View style={styles.mainView}>
+        <View style={[styles.mainView, customStyle]}>
             <TextInput
             style={styles.textInput}
             value={date}

@@ -86,7 +86,7 @@ function HomeScreen(props) {
                             </View>
 
                     <View style={styles.submitButton}>
-                        <CustomButton title="FIND NEOs" callback={() => formSubmit(date)}/>
+                        <CustomButton style={{flex: 0.5}} title="FIND NEOs" callback={() => formSubmit(date)}/>
                     </View>
 
                     <View style={styles.neoList}>
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     submitButton: {
         flex: 1,
         alignItems: 'center',
+        flexDirection: "row"
     },
     neoList: {
         flex: 7,
