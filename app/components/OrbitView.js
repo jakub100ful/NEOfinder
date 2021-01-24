@@ -38,24 +38,70 @@ export default function OrbitView(props) {
 
   // Asteroid Shape Data Initialiser
   const initialiseAsteroidShapeData = () => {
-    let asteroidList = [];
-    let orbitData = asteroidOrbitDataList;
-    let radii = 25;
+    let asteroidList = [],
+    planetColors = [
+      0x333333, //grey
+      0x993333, //ruddy
+      0xAA8239, //tan
+      0x2D4671, //blue
+      0x599532, //green
+      0x267257 //bluegreen
+    ],
+    orbitData = asteroidOrbitDataList,
+    radii = 0;
 
     orbitData.forEach((NEO, index) => {
-      let planet = new THREE.Mesh(new THREE.SphereBufferGeometry(4, 4, 4), 
-      new THREE.MeshBasicMaterial( { color: 0x333333 } ))
-
-      planet.orbitRadius = Math.random() * 50 + 50 + radii;
-      planet.rotSpeed = 0.005 + Math.random() * 0.01;
-      planet.rotSpeed *= Math.random() < .10 ? -1 : 1;
-      planet.rot = Math.random();
-      planet.orbitSpeed = (0.02 - index * 0.0048) * 0.25;
-      planet.orbit = Math.random() * Math.PI * 2;
-      planet.position.set(planet.orbitRadius, 0, 70);
-
-      scene.add(planet);
-      asteroidList.push(planet);
+        let size = 4 + Math.random() * 7,
+          type = Math.floor(Math.random() * planetColors.length),
+          roughness = Math.random() > .6 ? 1 : 0,
+          planetGeom = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(size, roughness),
+            new THREE.MeshLambertMaterial({
+              color: planetColors[type],
+            })
+          ),
+          planet = new THREE.Object3D();
+      
+        planet.add(planetGeom);
+      
+        if (type > 1 && Math.random() > 0.5) {
+          let atmoGeom = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(size + 1.5, roughness),
+            new THREE.MeshLambertMaterial({
+              color: planetColors[3],
+              transparent: true,
+              opacity: 1
+            })
+          );
+      
+          atmoGeom.castShadow = false;
+          planet.add(atmoGeom);
+        }
+      
+        planet.orbitRadius = Math.random() * 50 + 50 + radii;
+        planet.rotSpeed = 0.005 + Math.random() * 0.01;
+        planet.rotSpeed *= Math.random() < .10 ? -1 : 1;
+        planet.rot = Math.random();
+        planet.orbitSpeed = (0.02 - index * 0.0048) * 0.25;
+        planet.orbit = Math.random() * Math.PI * 2;
+        planet.position.set(planet.orbitRadius, 0, 0);
+      
+        radii = planet.orbitRadius + size;
+        asteroidList.push(planet);
+        scene.add(planet);
+      
+        let orbit = new THREE.Line(
+          new THREE.CircleGeometry(planet.orbitRadius, 90),
+          new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 1,
+            side: THREE.BackSide
+          })
+        );
+        orbit.geometry.vertices.shift();
+        orbit.rotation.x = THREE.Math.degToRad(90);
+        scene.add(orbit);
     })
     setAsteroidShapeDataList(asteroidList);
   }
@@ -76,9 +122,9 @@ export default function OrbitView(props) {
   const update = () => {
     earthShape.rotation.y += 0.01;
 
-    for (var p in asteroidShapeDataList) {
+    for (let p in asteroidShapeDataList) {
       let planet = asteroidShapeDataList[p];
-      planet.rot += planet.rotSpeed
+      planet.rot += planet.rotSpeed;
       planet.rotation.set(0, planet.rot, 0);
       planet.orbit += planet.orbitSpeed;
       planet.position.set(Math.cos(planet.orbit) * planet.orbitRadius, 0, Math.sin(planet.orbit) * planet.orbitRadius);
@@ -94,7 +140,7 @@ export default function OrbitView(props) {
 
     // Adding to scene
     scene.add(earthShape);
-    camera.position.set(0, 0, 300);
+    camera.position.set(0, 30, 250);
 
     const render = () => {
       requestAnimationFrame(render);
