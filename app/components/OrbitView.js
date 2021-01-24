@@ -1,115 +1,100 @@
-import React, { Component } from "react";
+import React, { useContext } from "react";
 import * as THREE from "three";
 import ExpoTHREE from "expo-three";
 import { GLView } from 'expo-gl';
-import OrbitControlsView from '../OrbitControlsView';
+import { useEffect, useState } from "react/cjs/react.development";
+import { UserContext } from '../provider/UserProvider';
+import fetchNEOOrbitData from '../functions/fetchNEOOrbitData';
 
 // https://ssd-api.jpl.nasa.gov/doc/sbdb.html
 
 global.THREE = global.THREE || THREE;
 
-export default class OrbitView extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      orbitData: null,
-      error: null,
-      width: this.props.width,
-      height: this.props.height,
-      camera: null
-    };
+export default function OrbitView(props) {
+  const user = useContext(UserContext);
+  const [scene, setScene] = useState(new THREE.Scene());
+  const [earthShape, setEarthShape] = useState(
+      new THREE.Mesh(new THREE.SphereBufferGeometry(20, 8, 8), 
+      new THREE.MeshBasicMaterial( { color: 0x1bb3fa } ))
+  );
+  // State for storing a list of the shape data for all favourited asteroids
+  const [asteroidOrbitDataList, setAsteroidOrbitDataList] = useState(null);
+  const [asteroidShapeDataList, setAsteroidShapeDataList] = useState(null);
+
+  // Fetch Orbit Data
+
+  
+  // Fetch Asteroid Orbit Data
+  const fetchAsteroidOrbitData = () => {
+    let tempList = [];
+    let asteroidList = [...user.NEOFavouritesList];
+
+    asteroidList.forEach(async (NEOid) => {
+      let orbitData = await fetchNEOOrbitData(NEOid);
+      tempList.push(orbitData);
+      setAsteroidOrbitDataList(tempList);
+    })
   }
 
+  // Asteroid Shape Data Initialiser
+  const initialiseAsteroidShapeData = () => {
+    let asteroidList = [];
+    let orbitData = asteroidOrbitDataList;
+    let radii = 25;
 
+    orbitData.forEach((NEO, index) => {
+      let planet = new THREE.Mesh(new THREE.SphereBufferGeometry(4, 4, 4), 
+      new THREE.MeshBasicMaterial( { color: 0x333333 } ))
 
-  _onGLContextCreate = async gl => {
-    
-    // Defining the scene, camera and renderer
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(120, this.state.width/this.state.height, 0.1, 1000);
-    camera.position.set(50, 50, 70);
+      planet.orbitRadius = Math.random() * 50 + 50 + radii;
+      planet.rotSpeed = 0.005 + Math.random() * 0.01;
+      planet.rotSpeed *= Math.random() < .10 ? -1 : 1;
+      planet.rot = Math.random();
+      planet.orbitSpeed = (0.02 - index * 0.0048) * 0.25;
+      planet.orbit = Math.random() * Math.PI * 2;
+      planet.position.set(planet.orbitRadius, 0, 70);
+
+      scene.add(planet);
+      asteroidList.push(planet);
+    })
+    setAsteroidShapeDataList(asteroidList);
+  }
+
+  
+
+  useEffect(() => {
+    fetchAsteroidOrbitData();
+  },[])
+
+  useEffect(() => {
+    if(asteroidShapeDataList == null && asteroidOrbitDataList != null){
+      initialiseAsteroidShapeData();
+    }
+  }, [asteroidOrbitDataList])
+
+  // Update Function - Shapes to be animated
+  const update = () => {
+    earthShape.rotation.y += 0.01;
+
+    for (var p in asteroidShapeDataList) {
+      let planet = asteroidShapeDataList[p];
+      planet.rot += planet.rotSpeed
+      planet.rotation.set(0, planet.rot, 0);
+      planet.orbit += planet.orbitSpeed;
+      planet.position.set(Math.cos(planet.orbit) * planet.orbitRadius, 0, Math.sin(planet.orbit) * planet.orbitRadius);
+    }
+  }
+
+  const _onGLContextCreate = async gl => {
+    const camera = new THREE.PerspectiveCamera(
+      75, gl.drawingBufferWidth / gl.drawingBufferHeight, 0.1, 1000
+    );
     const renderer = new ExpoTHREE.Renderer({ gl });
     renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
 
-    //Objects
-
-    // SUN
-    let starColor = (function() {
-      let colors = [0xFFFF00, 0x559999, 0xFF6339, 0xFFFFFF];
-      return colors[Math.floor(Math.random() * colors.length)];
-    })(),
-
-    star = new THREE.Mesh(
-      new THREE.SphereBufferGeometry(20, 32, 32),
-      new THREE.MeshBasicMaterial({map: await ExpoTHREE.loadAsync(require("../../assets/earth-texture.jpg"))})
-    )
-    star.castShadow = false;
-
-    // EARTH
-    
-    let planetGeom = new THREE.Mesh(
-      new THREE.SphereBufferGeometry(5, 3, 10),
-      new THREE.MeshBasicMaterial({map: await ExpoTHREE.loadAsync(require("../../assets/asteroid-texture-1.jpg"))})
-    ),
-    planet = new THREE.Object3D();
-
-    planet.add(planetGeom);
-
-    planet.orbitRadius = 50 + 50 + 0;
-    planet.rotSpeed = 0.005 + 0.01;
-    planet.rot = Math.random();
-    planet.orbitSpeed = (0.02 - 0 * 0.0048) * 0.25;
-    planet.orbit = Math.random() * Math.PI * 2;
-    planet.position.set(planet.orbitRadius, 0, 0);
-
-    var orbit = new THREE.Line(
-      new THREE.CircleGeometry(planet.orbitRadius, 90),
-      new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        transparent: false,
-        opacity: .05,
-        side: THREE.BackSide
-      })
-    );
-    orbit.geometry.vertices.shift();
-    orbit.rotation.x = THREE.Math.degToRad(90);
-    scene.add(orbit);
-
-    let radii = planet.orbitRadius + 0;
-    scene.add(planet);
-
-    //Lights
-    let light1 = new THREE.PointLight(starColor, 2, 0, 0);
-
-    light1.position.set(0, 0, 0);
-    scene.add(light1);
-
-    let light2 = new THREE.AmbientLight(0x090909);
-    scene.add(light2);
-
-    // for (let s in bgStars) {
-    //   let q = bgStars[s],
-    //     oX = q.x * this.state.width,
-    //     oY = q.y * this.state.height,
-    //     size = Math.random() < .9998 ? Math.random() : Math.random() * 3;
-    // }
-
-
-    
-    scene.add(star);
-    
-    const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-    const cube = new THREE.Mesh( geometry, material );
-
-
-    camera.lookAt(star.position);
-
-
-    function update() {
-      star.rotation.y += 0.0025;
-      planet.rotation.y += 0.0025;
-    }
+    // Adding to scene
+    scene.add(earthShape);
+    camera.position.set(0, 0, 300);
 
     const render = () => {
       requestAnimationFrame(render);
@@ -117,13 +102,15 @@ export default class OrbitView extends Component {
       renderer.render(scene, camera);
       gl.endFrameEXP();
     };
-    render();
+
+    if (earthShape.rotation.y < 10){
+      render();
+    }
   };
 
-  render() {
-    return(  
-          <GLView style={{ width: "100%", height: "100%", backgroundColor: "black", flex: 8 }} onContextCreate={this._onGLContextCreate} />
+  return(  
+        <GLView style={{ width: "100%", height: "100%", flex: 1 }} onContextCreate={_onGLContextCreate} />
 
-    )
-  }
+  )
+  
 }

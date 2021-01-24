@@ -187,6 +187,5 @@ const styles = StyleSheet.create({
     },
     orbitView: {
         flex: 4,
-        backgroundColor: "black"
       }
 })
