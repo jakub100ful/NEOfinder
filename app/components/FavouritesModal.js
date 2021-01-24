@@ -49,7 +49,7 @@ export default function FavouritesModal(props) {
               <FlatList
                 style={styles.listView}
                 data={NEOdataList}
-                keyExtractor={item => item.id}
+                keyExtractor={(item, index) => 'key'+index}
                 ItemSeparatorComponent={ItemSeparator}
                 refreshing={true}
                 renderItem={({item})=><FavouriteItem item={item}/>}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TextInput, TouchableHighlight } from 'react-native-gesture-handler';
@@ -8,10 +8,11 @@ import moment from "moment";
 import CustomButton from '../components/CustomButton';
 import FavouritesModal from '../components/FavouritesModal';
 import ClockStyleDateInput from '../components/ClockStyleDateInput';
+import OrbitView from '../components/OrbitView';
 
 function HomeScreen(props) {
     
-    const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
+    const [date, setDate] = useState(null);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [modalVisibility, setModalVisibility] = useState(false);
 
@@ -48,6 +49,12 @@ function HomeScreen(props) {
         const newState = !modalVisibility;
         setModalVisibility(newState);
     }
+
+    useEffect(() => {
+        if (date == null){
+            setDate(moment(new Date()).format("YYYY-MM-DD"));
+        }
+    }, [date])
     
     return (
         <View style={styles.container}>
@@ -55,7 +62,6 @@ function HomeScreen(props) {
             <Image style={styles.background} source={require('../../assets/star-bg.png')}/>
             
             {/* Workable area */}
-            <SafeAreaView style={styles.safeContainer}>
 
                 {/* Title Container - contains screen title */}
                 <View style={styles.topContainer}>
@@ -67,13 +73,16 @@ function HomeScreen(props) {
                     <View style={styles.formContainer}>
 
                             {/* Datepicker */}
-                            <Text style={styles.datepickerTitle}>Enter Date</Text>
+                            
+                            <View style={{flex:1}}>
+                                <Text style={styles.datepickerTitle}>Enter Date</Text>
+                            </View>
+
                             <View style={styles.datepickerView}>
                                 <ClockStyleDateInput 
                                     value={date}
                                     onFocus={showDatePicker}
                                 />
-
                             </View>
 
                                 <DateTimePickerModal
@@ -81,12 +90,16 @@ function HomeScreen(props) {
                                     mode="date"
                                     onConfirm={handleConfirm}
                                     onCancel={hideDatePicker}
+                                    
                                 />
 
+                            <View style={styles.submitButton}>
+                                <CustomButton title="FIND NEOs" callback={() => formSubmit(date)}/>
                             </View>
+                    </View>
 
-                    <View style={styles.submitButton}>
-                        <CustomButton style={{flex: 0.5}} title="FIND NEOs" callback={() => formSubmit(date)}/>
+                    <View style={styles.orbitView}>
+                        <OrbitView />
                     </View>
 
                     <View style={styles.neoList}>
@@ -97,7 +110,6 @@ function HomeScreen(props) {
                     </View>
                     
                 </View>
-            </SafeAreaView>
         </View>
     );
 }
@@ -108,7 +120,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#333945",
-        alignItems: 'stretch'  
+        alignItems: 'stretch',
+        justifyContent: "center"
     },
     safeContainer: {
         flex: 1,
@@ -117,7 +130,9 @@ const styles = StyleSheet.create({
     topContainer: {
         flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        backgroundColor: "#1d1135",
+        flexDirection: "row"
     },
     mainContainer: {
         flex: 8,
@@ -130,24 +145,25 @@ const styles = StyleSheet.create({
         color: "#3498DB",
         fontWeight: "500",
         fontSize: 70,
-        fontFamily: "8-bit-Arcade-In"
+        fontFamily: "8-bit-Arcade-In",
+        textAlign: "center"
     },
     formContainer: {
-        flex: 1,
+        flex: 2,
         alignItems: 'stretch',
-        width: "90%",
-        margin: "5%"
+        margin: "5%",
     },
     datepickerView: {
         flex: 1,
         flexDirection: 'row',
-        backgroundColor: "blue"
+        marginBottom: "5%"
     },
     datepickerTitle: {
-        fontSize: 50,
-        color: "white",
+        fontSize: 55,
+        color: "#ba1e68",
         fontWeight: '500',
         fontFamily: "8-bit-Arcade-In",
+        textAlign: "center"
     },
     submitButton: {
         flex: 1,
@@ -155,9 +171,10 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     neoList: {
-        flex: 7,
-        backgroundColor: "darkgrey",
-        justifyContent: "center"
+        flex: 1,
+        backgroundColor: "purple",
+
+        flexDirection: "row"
     },
     background: {
         position: "absolute",
@@ -167,5 +184,9 @@ const styles = StyleSheet.create({
     },
     modalButton: {
         flex: 1,
-    }
+    },
+    orbitView: {
+        flex: 4,
+        backgroundColor: "black"
+      }
 })
