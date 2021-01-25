@@ -48,9 +48,6 @@ export default function FavouritesModal(props) {
           animationType="slide"
           transparent={true}
           visible={true}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-          }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
