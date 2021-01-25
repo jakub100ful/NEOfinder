@@ -18,9 +18,9 @@ export default function OrbitView(props) {
 
   // THREE Primary State Initialisers
   const [scene, setScene] = useState(new THREE.Scene());
-
+  const earthSize = 25;
   const [earthShape, setEarthShape] = useState(
-      new THREE.Mesh(new THREE.SphereBufferGeometry(10, 8, 8), 
+      new THREE.Mesh(new THREE.SphereBufferGeometry(earthSize, 8, 8), 
       new THREE.MeshBasicMaterial( { color: 0x1bb3fa } ))
   );
   const [light, setLight] = useState(new THREE.PointLight(0xFFFFFF, 2, 0, 0)); 
@@ -60,7 +60,7 @@ export default function OrbitView(props) {
     radii = 0;
 
     orbitData.forEach((NEO, index) => {
-        let size = 5,
+        let size = NEOGenerate.getSize(NEO),
           type = Math.floor(Math.random() * planetColors.length),
           roughness = 0,
           planetGeom = new THREE.Mesh(
@@ -87,11 +87,11 @@ export default function OrbitView(props) {
           planet.add(atmoGeom);
         }
       
-        planet.orbitRadius = Math.random() * 50 + 50 + radii;
+        planet.orbitRadius = NEOGenerate.getOrbitRadius(NEO)+earthSize;
         planet.rotSpeed = 0.005 + Math.random() * 0.01;
         planet.rotSpeed *= Math.random() < .10 ? -1 : 1;
         planet.rot = Math.random();
-        planet.orbitSpeed = (0.02 - index * 0.0048) * 0.25;
+        planet.orbitSpeed = NEOGenerate.getVelocity(NEO);
         planet.orbit = Math.random() * Math.PI * 2;
         planet.position.set(planet.orbitRadius, 0, 0);
       
@@ -104,7 +104,7 @@ export default function OrbitView(props) {
           new THREE.MeshBasicMaterial({
             color: 0xffffff,
             transparent: true,
-            opacity: 1,
+            opacity: .5,
             side: THREE.BackSide
           })
         );
@@ -120,7 +120,7 @@ export default function OrbitView(props) {
   // Fetch orbit data
   useEffect(() => {
     fetchAsteroidOrbitData();
-  },[])
+  },[user.NEOFavouritesList])
 
   // Generate shape data
   useEffect(() => {
@@ -132,7 +132,7 @@ export default function OrbitView(props) {
 
   // Update Function - Shapes to be animated
   const update = () => {
-    earthShape.rotation.y += 0.01;
+    earthShape.rotation.y += 0.005;
 
     for (let p in asteroidShapeDataList) {
       let planet = asteroidShapeDataList[p];
@@ -155,7 +155,7 @@ export default function OrbitView(props) {
     scene.add(earthShape);
     light.position.set(0, 0, 0);
     scene.add(light);
-    camera.position.set(0, 20, 250);
+    camera.position.set(0, 30, 200);
 
     const render = () => {
       requestAnimationFrame(render);

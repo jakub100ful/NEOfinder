@@ -31,8 +31,8 @@ const getSize = (NEO) => {
  * @return {float} - Velocity for the asteroid
  */
 const getVelocity = (NEO) => {
-  let velocity = NEO.close_approach_data[0].relative_velocity.kilometers
-  let scaledVelocity = velocity/10000000000
+  let velocity = NEO.close_approach_data[0].relative_velocity.kilometers_per_second
+  let scaledVelocity = velocity/10000
   return scaledVelocity;
 }
 
@@ -71,60 +71,3 @@ const getColour = () => {
 
 
 export { getSize, getVelocity, getOrbitRadius, getInclination, getColour };
-
-// export default function generateNEOShapeData (NEO) {
-    
-
-
-
-//         let size = getSize(),
-//           type = Math.floor(Math.random() * asteroidColors.length),
-//           roughness = 0,
-//           geometry = new THREE.Mesh(
-//             new THREE.IcosahedronGeometry(size, roughness),
-//             new THREE.MeshLambertMaterial({
-//               color: asteroidColors[type],
-//             })
-//           ),
-//           asteroid = new THREE.Object3D();
-      
-//         asteroid.add(geometry);
-      
-//         if (type > 1 && Math.random() > 0.5) {
-//           let atmosphere = new THREE.Mesh(
-//             new THREE.IcosahedronGeometry(size + 1.5, roughness),
-//             new THREE.MeshLambertMaterial({
-//               color: asteroidColors[3],
-//               transparent: true,
-//               opacity: 1
-//             })
-//           );
-      
-//           atmosphere.castShadow = false;
-//           asteroid.add(atmosphere);
-//         }
-      
-//         asteroid.orbitRadius = getOrbitRadius();
-//         asteroid.rotSpeed = 0.005 + Math.random() * 0.01;
-//         asteroid.rotSpeed *= Math.random() < .10 ? -1 : 1;
-//         asteroid.rot = Math.random();
-//         asteroid.orbitSpeed = getVelocity();
-//         asteroid.orbit = Math.random() * Math.PI * 2;
-//         asteroid.position.set(asteroid.orbitRadius, 0, 0);
-//         asteroid.inclination = inclinnation;
-            
-//         let orbit = new THREE.Line(
-//           new THREE.CircleGeometry(asteroid.orbitRadius, 90),
-//           new THREE.MeshBasicMaterial({
-//             color: 0xffffff,
-//             transparent: true,
-//             opacity: 1,
-//             side: THREE.BackSide
-//           })
-//         );
-//         orbit.geometry.vertices.shift();
-//         orbit.rotation.x = THREE.Math.degToRad(inclinnation);
-        
-//         const NEOShapeData = [asteroid, orbit];
-//         return NEOShapeData;
-//   }
