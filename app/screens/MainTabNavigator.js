@@ -1,29 +1,16 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './HomeScreen';
-import SavedScreen from './SavedScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import ResultScreen from './ResultScreen';
 import IntroScreen from './IntroScreen';
 import NEOInfoScreen from './NEOInfoScreen';
 
-
+{/* Manages the navigation */}
 function MainTabNavigator(props) {
-    const Tab = createBottomTabNavigator();
 
     const SearchStack = createStackNavigator();
-
-    const SearchStackScreen = () => (
-        
-        <NavigationContainer>
-            <Tab.Navigator>
-                {/* <Tab.Screen name="HomeScreen" component={SearchStackScreen}/> */}
-                <Tab.Screen name="SavedScreen" component={SavedScreen}/>
-            </Tab.Navigator>
-        </NavigationContainer>
-    )
 
     return (
         <NavigationContainer>

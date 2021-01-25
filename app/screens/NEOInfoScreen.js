@@ -1,10 +1,8 @@
 import { useState } from "react/cjs/react.development";
 import { useEffect } from "react";
-import { Dimensions, View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import React, { Component } from "react";
-import OrbitView from '../components/OrbitView';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import React from "react";
 import CustomButton from "../components/CustomButton";
-import fetchNEOFavourites from "../functions/fetchNEOFavourites";
 import NEORenderPreview from "../components/NEORenderPreview";
 import fetchNEOOrbitData from "../functions/fetchNEOOrbitData";
 import getSizeComparison from "../functions/getSizeComparison";

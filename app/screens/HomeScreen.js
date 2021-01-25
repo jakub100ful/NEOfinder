@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect, useFocusEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
@@ -48,6 +48,7 @@ function HomeScreen(props) {
         setModalVisibility(newState);
     }
 
+    // Sets current date for the datepicker
     useEffect(() => {
         if (date == null){
             setDate(moment(new Date()).format("YYYY-MM-DD"));
@@ -70,36 +71,41 @@ function HomeScreen(props) {
                 <View style={styles.mainContainer}>
                     <View style={styles.formContainer}>
 
-                            {/* Datepicker */}
-                            
-                            <View style={{flex:1}}>
-                                <Text style={styles.datepickerTitle}>Enter Date</Text>
-                            </View>
+                        {/* Datepicker */}
+                        
+                        {/* Title */}
+                        <View style={{flex:1}}>
+                            <Text style={styles.datepickerTitle}>Enter Date</Text>
+                        </View>
 
-                            <View style={styles.datepickerView}>
-                                <ClockStyleDateInput 
-                                    value={date}
-                                    onFocus={showDatePicker}
-                                />
-                            </View>
+                        {/* Datepicker Component */}
+                        <View style={styles.datepickerView}>
+                            <ClockStyleDateInput 
+                                value={date}
+                                onFocus={showDatePicker}
+                            />
+                        </View>
 
-                                <DateTimePickerModal
-                                    isVisible={isDatePickerVisible}
-                                    mode="date"
-                                    onConfirm={handleConfirm}
-                                    onCancel={hideDatePicker}
-                                    
-                                />
+                        {/* Datepicker Modal */}
+                        <DateTimePickerModal
+                            isVisible={isDatePickerVisible}
+                            mode="date"
+                            onConfirm={handleConfirm}
+                            onCancel={hideDatePicker}
+                        />
 
-                            <View style={styles.submitButton}>
-                                <CustomButton title="FIND NEOs" callback={() => formSubmit(date)}/>
-                            </View>
+                        {/* Submit Button */}
+                        <View style={styles.submitButton}>
+                            <CustomButton title="FIND NEOs" callback={() => formSubmit(date)}/>
+                        </View>
                     </View>
 
+                    {/* Asteroid Orbit View */}
                     <View style={styles.orbitView}>
                         <OrbitView />
                     </View>
 
+                    {/* View Favourites Button */}
                     <View style={styles.neoList}>
                         {modalVisibility && <FavouritesModal navigation={props.navigation} callback={() => toggleModalVisibility()} />}
                         <View style={styles.modalButton}>
@@ -123,7 +129,6 @@ const styles = StyleSheet.create({
     },
     safeContainer: {
         flex: 1,
-        
     },
     topContainer: {
         flex: 1,

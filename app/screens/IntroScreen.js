@@ -1,47 +1,34 @@
 import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import CustomButton from '../components/CustomButton';
-import { Audio } from 'expo-av';
 
 
 function IntroScreen(props) {
-    const [sound, setSound] = React.useState();
 
-    async function playSound() {
-        console.log('Loading Sound');
-        const { sound } = await Audio.Sound.createAsync(
-           require('../../assets/sounds/button-click-sound.wav')
-        );
-        setSound(sound);
-    
-        console.log('Playing Sound');
-        await sound.playAsync(); }
-    
-      React.useEffect(() => {
-        return sound
-          ? () => {
-              console.log('Unloading Sound');
-              sound.unloadAsync(); }
-          : undefined;
-      }, [sound]);
-
+    /**
+     * Navigates to home screen
+     */
     function onStartButtonPress() {
-        playSound();
         props.navigation.navigate('Search');
     }
 
     return (
         <View style={styles.mainContainer}>
+
+            {/* Background */}
             <Image style={styles.background} source={require('../../assets/star-bg.png')}/>
-                <View style={styles.logoView}>
-                    
-                    <Image style={styles.stretch} source={require('../../assets/neo-finder-logo.png')}/>
+
+            {/* Logo */}
+            <View style={styles.logoView}>
+                <Image style={styles.stretch} source={require('../../assets/neo-finder-logo.png')}/>
+            </View>
+
+            {/* Start button */}
+            <View style={styles.buttonView}>
+                <View style={{width: "60%", height: "100%"}}>
+                    <CustomButton title="Start" callback={()=>{onStartButtonPress()}}/>
                 </View>
-                <View style={styles.buttonView}>
-                    <View style={{width: "60%", height: "100%"}}>
-                        <CustomButton title="Start" callback={()=>{onStartButtonPress()}}/>
-                    </View>
-                </View>
+            </View>
         </View>
     );
     
@@ -69,15 +56,6 @@ const styles = new StyleSheet.create({
         width: "100%",
         height: "100%",
         resizeMode: "contain"
-    },
-    startButton: {
-        resizeMode: "contain",
-        height: "100%",
-        width: "100%",
-    },
-    startButtonText: {
-        fontFamily: "8-bit-Arcade-In",
-        color: "white"
     },
     background: {
         position: "absolute",
