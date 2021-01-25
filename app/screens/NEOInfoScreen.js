@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   introView: {
     flex: 0.5,
-    width: "90%",
+    width: "100%",
     marginBottom: 5,
     flexDirection: "row"
   },
