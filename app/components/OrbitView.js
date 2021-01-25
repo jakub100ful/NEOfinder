@@ -6,6 +6,8 @@ import { useEffect, useState } from "react/cjs/react.development";
 import { UserContext } from '../provider/UserProvider';
 import fetchNEOOrbitData from '../functions/fetchNEOOrbitData';
 import { Text } from "react-native";
+import * as NEOGenerate from '../functions/generateNEOShapeData';
+import fetchNEOFavourites from '../functions/fetchNEOFavourites';
 
 // https://ssd-api.jpl.nasa.gov/doc/sbdb.html
 
@@ -58,7 +60,7 @@ export default function OrbitView(props) {
     radii = 0;
 
     orbitData.forEach((NEO, index) => {
-        let size = 4 + Math.random() * 7,
+        let size = 5,
           type = Math.floor(Math.random() * planetColors.length),
           roughness = 0,
           planetGeom = new THREE.Mesh(
@@ -153,7 +155,7 @@ export default function OrbitView(props) {
     scene.add(earthShape);
     light.position.set(0, 0, 0);
     scene.add(light);
-    camera.position.set(0, 10, 200);
+    camera.position.set(0, 20, 250);
 
     const render = () => {
       requestAnimationFrame(render);

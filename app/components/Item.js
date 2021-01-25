@@ -20,12 +20,6 @@ function Item(props) {
             <View style={styles.itemBodyView}>
                 <View>
                     <Text style={styles.itemBodyText}>
-                    Orbiting Body: {item.close_approach_data[0].orbiting_body}
-                    </Text>
-                    <Text style={styles.itemBodyText}>
-                    Close Approach Date: {item.close_approach_data[0].close_approach_date}
-                    </Text>
-                    <Text style={styles.itemBodyText}>
                     Miss Distance: {Math.round(item.close_approach_data[0].miss_distance.kilometers*100)/100} km
                     </Text>
                     <Text style={styles.itemBodyText}>
@@ -36,8 +30,12 @@ function Item(props) {
                 
             </View>
             <View style={styles.buttonView}>
+                <View style={styles.itemViewButtonContainer}>
                     <CustomButton style={styles.viewButton} title="VIEW" callback={() => {props.function(item)}}/>
+                </View>
+                <View style={styles.itemAddButtonContainer}>
                     <CustomButton style={styles.addButton} title={item.isInFavourites ? "REMOVE" : "ADD"} callback={() => {user.handleNEOFavouritesListChange(item)}}/>
+                </View>
                 </View>
             
         </View>
@@ -52,13 +50,14 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     item: {
-        backgroundColor: 'rgba(255, 255, 255, 0.15)'
+        backgroundColor: 'rgba(255, 255, 255, 0.15)',
     },
     itemHeader: {
         fontWeight: '500',
         fontSize: 35,
         fontFamily: "8-bit-Arcade-In",
-        color: "white"
+        color: "white",
+        padding: 10
     },
     itemBodyText: {
         marginTop: 5,
@@ -68,11 +67,22 @@ const styles = StyleSheet.create({
     },
     itemBodyView: {
         flex: 1,
+        width: "90%",
+        alignItems: "center"
     },
     buttonView: {
         flexDirection: "row",
-        justifyContent: "flex-start",
+        justifyContent: "space-around",
         flex: 1,
+        marginTop: 10
+    },
+    itemAddButtonContainer: {
+        width: "40%",
+        height: "100%"
+    },
+    itemViewButtonContainer: {
+        width: "40%",
+        height: "80%"
     }
     
 })

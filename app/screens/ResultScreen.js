@@ -71,9 +71,6 @@ function ResultScreen(props) {
                     <Text style={styles.titleText}>
                         {neoList ? 'Results ' : 'Loading'}
                     </Text>
-                    <Button title="Clear" onPress={()=>{clearAsyncStorage()}} />
-                    <Button title="Get Favourites" onPress={()=>{getAllData()}} />
-
                 </View>
                 {error && <View style={styles.errorMessageBox}>
                     <Text>{error}</Text>

@@ -38,43 +38,55 @@ export default function NEOInfoScreen (props){
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "black" }}>
         <Image style={styles.background} source={require('../../assets/star-bg.png')}/>
-        <View style= {{flex: 1, marginTop: "7%", flexDirection: "row"}}>
-          <CustomButton title="Back" callback={()=>{props.navigation.goBack()}}/>
-          <CustomButton title="Back" callback={()=>{props.navigation.navigate('Search')}}/>
+        
+        
+        <View style={styles.body}>
+          <View style={styles.NEOinfoView}>
+            
+            <View style={styles.introView}>
 
-          
-        </View>
-        <View style={styles.NEOinfoView}>
-          <Text style={styles.header}>{NEO.name}</Text>
+              <View style={styles.introInfoView}>
+                <Text style={styles.header}>{NEO.name}</Text>
+              </View>
 
-            <View style={styles.sectionView}>
-              <NEORenderPreview />
             </View>
-
-            <View style={styles.sectionView}>
-              <Text style={styles.sectionHeader}>General Info</Text>
-              <View style={styles.sectionBody}>
-
-                <Text style={styles.mainText}>Hazardous: {NEO["is_potentially_hazardous_asteroid"] ? "Yes" : "No"}</Text>
-                <Text style={styles.mainText}>Orbiting Body: {NEO.close_approach_data[0].orbiting_body}</Text>
-                
+              <View style={styles.NEOPreview}>
+                <NEORenderPreview NEO={NEO}/>
+              </View>
+              <View style={styles.sectionView}>
+                <Text style={styles.sectionHeader}>Close Approach Data</Text>
+                <View style={styles.sectionBody}>
+                  <Text style={styles.mainText}>Hazardous:</Text>
+                  <Text style={styles.subText}>{NEO["is_potentially_hazardous_asteroid"] ? "Yes" : "No"}</Text>
+                  <Text style={styles.mainText}>Orbiting Body:</Text>
+                  <Text style={styles.subText}>{NEO.close_approach_data[0].orbiting_body}</Text>
+                  <Text style={styles.mainText}>Close Approach Date:</Text>
+                  <Text style={styles.subText}>{NEO.close_approach_data[0].close_approach_date}</Text>
+                  <Text style={styles.mainText}>Miss Distance:</Text>
+                  <Text style={styles.subText}>{Math.round(NEO.close_approach_data[0].miss_distance.kilometers*100)/100} km</Text>
+                  <Text style={styles.mainText}>Relative Velocity:</Text>
+                  <Text style={styles.subText}>{Math.round(NEO.close_approach_data[0].relative_velocity.kilometers_per_second*100)/100} km/s</Text>
               </View>
             </View>
-            <View style={styles.sectionView}>
-              <Text style={styles.sectionHeader}>Close Approach Data</Text>
-              <Text style={styles.mainText}>Close Approach Date: {NEO.close_approach_data[0].close_approach_date}</Text>
-              <Text style={styles.mainText}>Miss Distance: {Math.round(NEO.close_approach_data[0].miss_distance.kilometers*100)/100} km</Text>
-              <Text style={styles.mainText}>Relative Velocity: {Math.round(NEO.close_approach_data[0].relative_velocity.kilometers_per_second*100)/100} km/s</Text>
-            </View>
-          
+          </View>
+
         </View>
         {/* <OrbitView width={windowWidth} height={windowHeight}/> */}
+        <View style= {{flex: 1, marginTop: "7%", flexDirection: "row"}}>
+          <CustomButton title="Back" callback={()=>{props.navigation.goBack()}}/>
+        </View>
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  body: {
+    flex: 11,
+    width: "90%",
+    alignItems: "center",
+    justifyContent: "center"
+  },
   background: {
       position: "absolute",
       height: "100%",
@@ -82,23 +94,19 @@ const styles = StyleSheet.create({
       resizeMode: "stretch"
   },
   NEOinfoView: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    flex: 7,
-    width: "90%",
-    paddingVertical: 10,
-    alignItems: "center"
+    height: "85%"
   },
   sectionView: {
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    flex: 1,
-    width: "90%",
+    flex: 2,
     marginBottom: 5
   },
   header: {
     fontWeight: '500',
-    fontSize: 40,
+    fontSize: 35,
     fontFamily: "8-bit-Arcade-In",
-    color: "white"
+    color: "white",
+    textAlign: "center"
 },
   sectionHeader: {
     fontWeight: '500',
@@ -113,5 +121,29 @@ const styles = StyleSheet.create({
     fontFamily: "8-bit-Arcade-In",
     color: "white"
   },
+  subText: {
+    fontSize: 27,
+    fontFamily: "3Dventure",
+    color: "white"
+  },
+  introView: {
+    flex: 0.5,
+    width: "90%",
+    marginBottom: 5,
+    flexDirection: "row"
+  },
+  introInfoView: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#1d1135",
+  },
+  NEOPreview: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)'
+  },
+  sectionBody: {
+    width: "90%",
+    padding: 10
+  }
   
 })

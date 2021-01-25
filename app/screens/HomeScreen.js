@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useFocusEffect } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
