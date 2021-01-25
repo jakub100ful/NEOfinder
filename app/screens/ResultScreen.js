@@ -57,7 +57,7 @@ function ResultScreen(props) {
      */
     const viewOrbitNEO = (NEO) => {
         console.log(NEO);
-        props.navigation.navigate('Orbit', {NEO: NEO});
+        props.navigation.navigate('Info', {NEO: NEO});
     }
 
     return (

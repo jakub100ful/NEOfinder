@@ -17,60 +17,57 @@ import CustomButton from "./CustomButton";
 
 export default function FavouritesModal(props) {
     const user = useContext(UserContext);
-    const [NEOdataList, setNEOdataList] = useState(null);
 
-    useEffect(() => {
-        if(NEOdataList == null){
-            const fetchFavourites = async () => {
-                const result = await fetchNEOFavourites(user.NEOFavouritesList).then(data => {return data});
-                console.log("RESULT",result);
-                setNEOdataList(result);
-            }
-            fetchFavourites();
-        }
-    },[])
+    /**
+     * Takes an id of a Near Earth Object and navigates to the Orbit screen to preview the NEO's orbit
+     * @param {object} NEOid - NEO object to be previewed. This is passed to the new screen through the navigation prop.
+     */
+    const viewNEOInfo = (NEOid) => {
+      console.log("Navigate!")
+      props.navigation.navigate('Info', {NEOid: NEOid});
+    }
 
-  return (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={true}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Saved NEOs</Text>
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={true}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Saved NEOs</Text>
 
-            {/* List of favourite NEOs */}
-            <View style={{flex: 10, width: "100%", height: "100%"}}>
-              <FlatList
-                style={styles.listView}
-                data={NEOdataList}
-                keyExtractor={(item, index) => 'key'+index}
-                ItemSeparatorComponent={ItemSeparator}
-                refreshing={true}
-                renderItem={({item})=><FavouriteItem item={item}/>}
-              />
+              {/* List of favourite NEOs */}
+              <View style={{flex: 10, width: "100%", height: "100%"}}>
+                <FlatList
+                  style={styles.listView}
+                  data={user.NEOFavouritesList}
+                  keyExtractor={(item, index) => 'key'+index}
+                  ItemSeparatorComponent={ItemSeparator}
+                  refreshing={true}
+                  renderItem={({item})=><FavouriteItem item={item} function={()=>{viewNEOInfo()}}/>}
+                />
+              </View>
+
+              {/* Close Button */}
+              <View style={styles.closeButtonWrapper}>
+                <CustomButton 
+                  title="CLOSE"
+                  callback={() => {
+                    props.callback()
+                  }}
+                />
+              </View>
+              
             </View>
-
-            {/* Close Button */}
-            <View style={styles.closeButtonWrapper}>
-              <CustomButton 
-                title="CLOSE"
-                callback={() => {
-                  props.callback()
-                }}
-              />
-            </View>
-            
           </View>
-        </View>
-      </Modal>
-    </View>
-  );
+        </Modal>
+      </View>
+  )
 };
 
 const styles = StyleSheet.create({

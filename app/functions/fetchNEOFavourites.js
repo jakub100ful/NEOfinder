@@ -15,6 +15,7 @@ const fetchNEOFavourites = async (favouritesList) => {
             
         // Unloading payload depending on a successful call.
             if (responseJson){
+                console.log("Response:",responseJson)
                 return responseJson;
             }else{
                 error = "Unable to fetch orbit data at this moment. Please try later or restart the app.";

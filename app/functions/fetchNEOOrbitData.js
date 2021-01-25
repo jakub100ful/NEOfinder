@@ -5,14 +5,13 @@
  */
 const fetchNEOOrbitData = async (NEOid) => {
     let error = "";
-    const orbitData = await fetch(`https://ssd-api.jpl.nasa.gov/sbdb.api?spk=${NEOid}&cd-epoch=1`)
+    const orbitData = await fetch(`https://www.neowsapp.com/rest/v1/neo/${NEOid}?api_key=R3aOcYecyMfmnmoOL17jBY0ohDkk5o3e73j4O8BX`)
     .then((response) => response.json())
     .then((responseJson) => {
     // Unloading payload depending on a successful call.
 
-        if (responseJson.orbit){
-            const orbitDataResponse = responseJson.orbit;
-            return orbitDataResponse;
+        if (responseJson){
+            return responseJson;
         }else{
             error = "Unable to fetch orbit data at this moment. Please try later or restart the app.";
         }

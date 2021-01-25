@@ -6,8 +6,8 @@ import HomeScreen from './HomeScreen';
 import SavedScreen from './SavedScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import ResultScreen from './ResultScreen';
-import RenderScreen from './RenderScreen';
 import IntroScreen from './IntroScreen';
+import NEOInfoScreen from './NEOInfoScreen';
 
 
 function MainTabNavigator(props) {
@@ -36,7 +36,7 @@ function MainTabNavigator(props) {
                 <SearchStack.Screen name="Intro" component={IntroScreen}/>
                 <SearchStack.Screen name="Search" component={HomeScreen}/>
                 <SearchStack.Screen name="Results" component={ResultScreen}/>
-                <SearchStack.Screen name="Orbit" component={RenderScreen}/>
+                <SearchStack.Screen name="Info" component={NEOInfoScreen}/>
             </SearchStack.Navigator>
         </NavigationContainer>
     );

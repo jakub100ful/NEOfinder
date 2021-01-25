@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 import CustomButton from '../components/CustomButton';
 import handleNEOInFavouriteState from '../functions/handleNEOInFavouriteState';
 import {UserContext} from '../provider/UserProvider';
@@ -13,20 +14,19 @@ function FavouriteItem(props) {
     return (
         <View key={item.id} style={styles.item}>
             {/* Item Body */}
-            <View style={styles.itemNameContainer}>
-                {/* NEO Name */}
-                <Text style={styles.itemNameText}>
-                    Name
-                </Text>
-            </View>
+                <View style={styles.itemNameContainer}>
+                    <TouchableHighlight onPress={() => {props.function(item)}}>
+                        {/* NEO Name */}
+                        <Text style={styles.itemNameText}>
+                            {item}
+                        </Text>
+                    </TouchableHighlight>
+                </View>
 
             {/* Buttons */}
             <View style={styles.itemButtonWrapper}>
-                <View style={styles.itemViewButtonContainer}>
-                    <CustomButton style={styles.viewButton} title="VIEW" callback={() => {props.function(item)}}/>
-                </View>
                 <View style={styles.itemAddButtonContainer}>
-                    <CustomButton style={styles.addButton} title={item.isInFavourites ? "REMOVE" : "ADD"} callback={() => {user.handleNEOFavouritesListChange(item)}}/>
+                    <CustomButton style={styles.addButton} title="REMOVE" callback={() => {user.handleNEOFavouritesListChange(item)}}/>
                 </View>
             </View>
             
@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         flex: 1,
+        padding: 10
     },
     itemHeader: {
         fontWeight: '500',
@@ -54,25 +55,24 @@ const styles = StyleSheet.create({
         color: "white"
     },
     itemNameText: {
-        marginTop: 5,
-        color: "black",
+        color: "lightblue",
         fontFamily: "8-bit-Arcade-In",
         fontSize: 40
     },
     itemNameContainer: {
-        flex: 1,
+        flex: 2,
         justifyContent: "center",
         alignItems: "center"
     },
     itemButtonWrapper: {
         flexDirection: "row",
-        flex: 1,
-        justifyContent: "space-around",
+        flex: 3,
+        justifyContent: "flex-end",
         alignItems: "center"
     },
     itemAddButtonContainer: {
-        width: "45%",
-        height: "80%"
+        width: "60%",
+        height: "100%"
     },
     itemViewButtonContainer: {
         width: "45%",

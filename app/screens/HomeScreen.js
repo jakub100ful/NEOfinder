@@ -1,9 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { TextInput, TouchableHighlight } from 'react-native-gesture-handler';
-import { Ionicons } from '@expo/vector-icons';
 import moment from "moment";
 import CustomButton from '../components/CustomButton';
 import FavouritesModal from '../components/FavouritesModal';
@@ -103,7 +101,7 @@ function HomeScreen(props) {
                     </View>
 
                     <View style={styles.neoList}>
-                        {modalVisibility && <FavouritesModal callback={() => toggleModalVisibility()} />}
+                        {modalVisibility && <FavouritesModal navigation={props.navigation} callback={() => toggleModalVisibility()} />}
                         <View style={styles.modalButton}>
                             <CustomButton title="VIEW FAVOURITES" callback={() => toggleModalVisibility()}/>
                         </View>
