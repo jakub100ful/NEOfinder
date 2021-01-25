@@ -59,7 +59,7 @@ export default function OrbitView(props) {
     orbitData = asteroidOrbitDataList,
     radii = 0;
 
-    orbitData.forEach((NEO, index) => {
+    for (let NEO of orbitData){
         let size = NEOGenerate.getSize(NEO),
           type = Math.floor(Math.random() * planetColors.length),
           roughness = 0,
@@ -111,7 +111,10 @@ export default function OrbitView(props) {
         orbit.geometry.vertices.shift();
         orbit.rotation.x = THREE.Math.degToRad(90);
         scene.add(orbit);
-    })
+    
+    }
+
+    
     console.log(asteroidList.length);
     setAsteroidShapeDataList(asteroidList);
   }

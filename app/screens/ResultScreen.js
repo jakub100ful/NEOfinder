@@ -7,6 +7,7 @@ import ItemSeparator from '../components/ItemSeparator';
 import Item from '../components/Item';
 import fetchNEOList from '../functions/fetchNEOList';
 import { UserContext } from '../provider/UserProvider';
+import CustomButton from '../components/CustomButton';
 
 
 function ResultScreen(props) {
@@ -42,6 +43,13 @@ function ResultScreen(props) {
         props.navigation.navigate('Info', {NEO: NEO});
     }
 
+    /**
+     * Goes back in the navigation stack
+     */
+    const handleBackButton = () => {
+        props.navigation.goBack()
+    }
+
     return (
         <View
         style={{
@@ -66,6 +74,9 @@ function ResultScreen(props) {
                 refreshing={true}
                 renderItem={({item})=><Item item={item} function={viewOrbitNEO}/>}
                 />
+                <View style={styles.backButtonView}>
+                    <CustomButton title="Back" callback={()=>{handleBackButton()}}/>
+                </View>
             </SafeAreaView>
             
         </View>
@@ -133,6 +144,10 @@ const styles = StyleSheet.create({
     listView: {
         flex: 9,
         
+    },
+    backButtonView: {
+        flex: 0.1,
+        marginTop: "5%"
     }
     
 })
