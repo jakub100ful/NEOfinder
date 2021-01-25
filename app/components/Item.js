@@ -33,7 +33,7 @@ function Item(props) {
                     <CustomButton style={styles.viewButton} title="VIEW" callback={() => {props.function(item)}}/>
                 </View>
                 <View style={styles.itemAddButtonContainer}>
-                    <CustomButton style={styles.addButton} title={item.isInFavourites ? "REMOVE" : "ADD"} callback={() => {user.handleNEOFavouritesListChange(item)}}/>
+                    <CustomButton style={styles.addButton} title={item.isInFavourites ? "UNSAVE" : "SAVE"} callback={() => {user.handleNEOFavouritesListChange(item)}}/>
                 </View>
                 </View>
             

@@ -7,23 +7,27 @@ import CustomButton from "../components/CustomButton";
 import fetchNEOFavourites from "../functions/fetchNEOFavourites";
 import NEORenderPreview from "../components/NEORenderPreview";
 import fetchNEOOrbitData from "../functions/fetchNEOOrbitData";
+import getSizeComparison from "../functions/getSizeComparison";
 
-// https://ssd-api.jpl.nasa.gov/doc/sbdb.html
 
 export default function NEOInfoScreen (props){
   const [NEO, setNEO] = useState(null);
   const [tempNEO, setTempNEO] = useState(null);
+  const [sizeComparison, setSizeComparison] = useState(null);
+
+  const getComparison = async (measurement, measurementUnit) => {
+    const comparison = await getSizeComparison(measurement, measurementUnit);
+    setSizeComparison(comparison);
+  }
 
   useEffect(()=>{
     const fetchData = async () => {
-      console.log(props.route.params.NEOid);
       const data = await fetchNEOOrbitData(props.route.params.NEOid);
-      
       setTempNEO(data);
     }
+    
 
     if (props.route.params.NEO){
-      console.log("NEO IN PARAMS")
       setNEO(props.route.params.NEO);
     }else{
       fetchData(); 
@@ -46,18 +50,21 @@ export default function NEOInfoScreen (props){
         }else {
           closestApproachDate = approachDate;
         }
-        
       }
   
       stateCopy.close_approach_data = [closestApproachDate];
-      
-      console.log("Length:",stateCopy.close_approach_data.length);
-      console.log("STATE COPY",stateCopy.close_approach_data);
+
       setNEO(stateCopy)
     }
   },[tempNEO])
 
-  if (NEO == null){
+  useEffect(() => {
+    if (sizeComparison == null & NEO){
+      getComparison(NEO.estimated_diameter.meters.estimated_diameter_min, "meters")
+    }
+  }, [])
+
+  if (NEO == null & sizeComparison == null){
     return(
       <View>
         <Text>Loading</Text>
@@ -96,6 +103,9 @@ export default function NEOInfoScreen (props){
                   <Text style={styles.subText}>{Math.round(NEO.close_approach_data[0].miss_distance.kilometers*100)/100} km</Text>
                   <Text style={styles.mainText}>Relative Velocity:</Text>
                   <Text style={styles.subText}>{Math.round(NEO.close_approach_data[0].relative_velocity.kilometers_per_second*100)/100} km/s</Text>
+                  <Text style={styles.mainText}>Estimated Diameter:</Text>
+                  <Text style={styles.subText}>{Math.round(NEO.estimated_diameter.meters.estimated_diameter_min*100)/100} m</Text>
+                  <Text style={styles.subText}>{sizeComparison}</Text>
               </View>
             </View>
           </View>

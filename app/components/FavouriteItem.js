@@ -22,7 +22,7 @@ function FavouriteItem(props) {
             <View key={props.item.id} style={styles.item}>
                 {/* Item Body */}
                     <View style={styles.itemNameContainer}>
-                        <TouchableHighlight onPress={() => {props.function(item)}}>
+                        <TouchableHighlight onPress={() => {props.function(props.item)}}>
                             {/* NEO Name */}
                             <Text style={styles.itemNameText}>
                                 {props.item}

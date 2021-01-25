@@ -15,8 +15,6 @@ export default function NEORenderPreview(props) {
 
   // THREE Primary State Initialisers
   const [scene, setScene] = useState(new THREE.Scene());
-  const [camera, setCamera] = useState(null);
-  const [renderer, setRenderer] = useState(null);
   const [asteroid, setAsteroid] = useState(new THREE.Object3D())
   const [asteroidShape, setAsteroidShape] = useState(
     new THREE.Mesh(

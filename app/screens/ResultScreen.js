@@ -8,23 +8,6 @@ import Item from '../components/Item';
 import fetchNEOList from '../functions/fetchNEOList';
 import { UserContext } from '../provider/UserProvider';
 
-/**
- * Prints all data within AsyncStorage.
- */
-const getAllData = () =>{
-    AsyncStorage.getAllKeys().then((keys) => {
-      return AsyncStorage.multiGet(keys)
-        .then((result) => {
-          console.log(JSON.stringify(result));
-        }).catch((e) =>{
-          console.log(e);
-        });
-    });
-  }
-
-const clearAsyncStorage = async() => {
-    AsyncStorage.clear();
-}
 
 function ResultScreen(props) {
     const [date, setDate] = useState(props.route.params.date);
@@ -32,7 +15,6 @@ function ResultScreen(props) {
     const [neoList, setNeoList] = useState(null);
     const user = useContext(UserContext);
     
-
 
     useEffect(() => {
         if(!AsyncStorage.getItem('userAddedNEOList')){

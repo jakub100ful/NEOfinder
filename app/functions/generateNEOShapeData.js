@@ -14,7 +14,6 @@ const asteroidColours = [
  * @return {float} - Size for the asteroid
  */
 const getSize = (NEO) => {
-  console.log("GET SIZE",NEO);
   let minDiameter = NEO.estimated_diameter.meters.estimated_diameter_min,
   maxDiameter = NEO.estimated_diameter.meters.estimated_diameter_max
 
