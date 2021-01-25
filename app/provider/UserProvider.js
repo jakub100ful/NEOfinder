@@ -32,9 +32,13 @@ const UserProvider = (props) => {
      */
     const handleNEOFavouritesListChange = (NEO) =>{
         try {
+            
+            
             const parsedList = NEOFavouritesList == null ? [] : NEOFavouritesList;
             const tempList = parsedList;
             let matchFound = false;
+
+            if (typeof NEO == "object"){
 
             // List is already empty, no need to check for existing keys
             if (parsedList === undefined || parsedList.length == 0) {
@@ -51,7 +55,6 @@ const UserProvider = (props) => {
                         matchFound = true;
                         NEO.isInFavourites = false;
                         tempList.splice(i, 1);
-                        // saveFavouritesToStore(tempList);
                         setNEOFavouritesList([...tempList]);
                         break;
                     }
@@ -61,8 +64,17 @@ const UserProvider = (props) => {
                 if (!matchFound){
                     tempList.push(NEO.id);
                     NEO.isInFavourites = true;
-                    // saveFavouritesToStore(tempList);
                     setNEOFavouritesList([...tempList]);
+                }
+            }
+            }else{
+                for (let i = 0; i < parsedList.length; i++){
+                    // If a match is found, it removes the existing key
+                    if (parsedList[i] === NEO){
+                        tempList.splice(i, 1);
+                        setNEOFavouritesList([...tempList]);
+                        break;
+                    }
                 }
             }
 

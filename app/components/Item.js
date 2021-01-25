@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import CustomButton from '../components/CustomButton';
-import handleNEOInFavouriteState from '../functions/handleNEOInFavouriteState';
 import {UserContext} from '../provider/UserProvider';
 
 

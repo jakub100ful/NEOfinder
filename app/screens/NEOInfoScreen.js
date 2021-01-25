@@ -6,25 +6,56 @@ import OrbitView from '../components/OrbitView';
 import CustomButton from "../components/CustomButton";
 import fetchNEOFavourites from "../functions/fetchNEOFavourites";
 import NEORenderPreview from "../components/NEORenderPreview";
+import fetchNEOOrbitData from "../functions/fetchNEOOrbitData";
 
 // https://ssd-api.jpl.nasa.gov/doc/sbdb.html
 
 export default function NEOInfoScreen (props){
-  const [NEO, setNEO] = useState(null)
+  const [NEO, setNEO] = useState(null);
+  const [tempNEO, setTempNEO] = useState(null);
 
   useEffect(()=>{
     const fetchData = async () => {
-      const arrayToFetch = [props.route.params.NEOid];
-      const data = await fetchNEOFavourites(arrayToFetch);
-      return data;
+      console.log(props.route.params.NEOid);
+      const data = await fetchNEOOrbitData(props.route.params.NEOid);
+      
+      setTempNEO(data);
     }
 
     if (props.route.params.NEO){
+      console.log("NEO IN PARAMS")
       setNEO(props.route.params.NEO);
     }else{
-      setNEO(fetchData());
+      fetchData(); 
     }
   }, [])
+
+  useEffect(()=>{
+    if (tempNEO != null){
+      const currentDate = new Date();
+      let stateCopy = tempNEO;
+      let closestApproachDate;
+      let tempDate;
+      
+      for (let approachDate of stateCopy.close_approach_data){
+        let formattedDate = Date.parse(approachDate.close_approach_date);
+
+        if (formattedDate > currentDate){
+          closestApproachDate = approachDate;
+          break;
+        }else {
+          closestApproachDate = approachDate;
+        }
+        
+      }
+  
+      stateCopy.close_approach_data = [closestApproachDate];
+      
+      console.log("Length:",stateCopy.close_approach_data.length);
+      console.log("STATE COPY",stateCopy.close_approach_data);
+      setNEO(stateCopy)
+    }
+  },[tempNEO])
 
   if (NEO == null){
     return(
@@ -33,7 +64,6 @@ export default function NEOInfoScreen (props){
       </View>
     )
   }else{
-
     return(
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "black" }}>

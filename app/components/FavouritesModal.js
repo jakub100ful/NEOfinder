@@ -4,12 +4,10 @@ import {
   Modal,
   StyleSheet,
   Text,
-  TouchableHighlight,
   View,
   FlatList
 } from "react-native";
 import { UserContext } from "../provider/UserProvider";
-import fetchNEOFavourites from '../functions/fetchNEOFavourites';
 import ItemSeparator from '../components/ItemSeparator';
 import FavouriteItem from '../components/FavouriteItem';
 import CustomButton from "./CustomButton";
@@ -17,6 +15,7 @@ import CustomButton from "./CustomButton";
 
 export default function FavouritesModal(props) {
     const user = useContext(UserContext);
+    const [favouriteNEOs, setFavouriteNEOs] = useState(null);
 
     /**
      * Takes an id of a Near Earth Object and navigates to the Orbit screen to preview the NEO's orbit
@@ -24,8 +23,24 @@ export default function FavouritesModal(props) {
      */
     const viewNEOInfo = (NEOid) => {
       console.log("Navigate!")
+      props.callback();
       props.navigation.navigate('Info', {NEOid: NEOid});
     }
+
+    const ListEmpty = () => {
+      return(
+        <View style={styles.listEmptyView}>
+            <Text style={styles.listEmptyText}>You have no favourites:(</Text>
+        </View>
+      )
+    }
+
+    useEffect(() => {
+      console.log("STATE CHANGE")
+      let tempList = [...user.NEOFavouritesList]
+      console.log(tempList);
+      setFavouriteNEOs(tempList);
+    }, [user.NEOFavouritesList])
 
     return (
       <View style={styles.centeredView}>
@@ -45,11 +60,13 @@ export default function FavouritesModal(props) {
               <View style={{flex: 10, width: "100%", height: "100%"}}>
                 <FlatList
                   style={styles.listView}
-                  data={user.NEOFavouritesList}
+                  data={favouriteNEOs}
                   keyExtractor={(item, index) => 'key'+index}
                   ItemSeparatorComponent={ItemSeparator}
+                  ListEmptyComponent={ListEmpty}
                   refreshing={true}
-                  renderItem={({item})=><FavouriteItem item={item} function={()=>{viewNEOInfo()}}/>}
+                  extraData={user.NEOFavouritesList}
+                  renderItem={({item})=><FavouriteItem item={item} function={()=>{viewNEOInfo(item)}}/>}
                 />
               </View>
 
@@ -75,7 +92,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    marginTop: 22,
+    backgroundColor: "rgba(0,0,0,0.7)"
   },
   modalView: {
     margin: 20,
@@ -91,7 +109,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     width: "90%",
-    height: "80%"
+    height: "60%"
   },
   openButton: {
     backgroundColor: "#F194FF",
@@ -118,5 +136,15 @@ const styles = StyleSheet.create({
     flex: 0.7, 
     flexDirection: "row",
     backgroundColor: "white",
+  },
+  listEmptyView: {
+    height: 100,
+    justifyContent: "center",
+  },
+  listEmptyText: {
+    fontSize: 30,
+    textAlign: "center",
+    fontFamily: "3Dventure",
+    color: "yellow"
   }
 });

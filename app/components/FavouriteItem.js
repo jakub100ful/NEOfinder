@@ -1,37 +1,44 @@
 import React, { useContext, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { useEffect } from 'react/cjs/react.development';
 import CustomButton from '../components/CustomButton';
 import handleNEOInFavouriteState from '../functions/handleNEOInFavouriteState';
 import {UserContext} from '../provider/UserProvider';
 
 
 function FavouriteItem(props) {
-    const [item, setItem] = useState(props.item);
     const [favList, setFavList] = useState(props.favList);
     const user = useContext(UserContext);
 
-    return (
-        <View key={item.id} style={styles.item}>
-            {/* Item Body */}
-                <View style={styles.itemNameContainer}>
-                    <TouchableHighlight onPress={() => {props.function(item)}}>
-                        {/* NEO Name */}
-                        <Text style={styles.itemNameText}>
-                            {item}
-                        </Text>
-                    </TouchableHighlight>
-                </View>
-
-            {/* Buttons */}
-            <View style={styles.itemButtonWrapper}>
-                <View style={styles.itemAddButtonContainer}>
-                    <CustomButton style={styles.addButton} title="REMOVE" callback={() => {user.handleNEOFavouritesListChange(item)}}/>
-                </View>
-            </View>
-            
+    if (props.item == null){
+        return(
+        <View>
+            <Text>Loading...</Text>
         </View>
-    );
+        )
+    }else{
+        return (
+            <View key={props.item.id} style={styles.item}>
+                {/* Item Body */}
+                    <View style={styles.itemNameContainer}>
+                        <TouchableHighlight onPress={() => {props.function(item)}}>
+                            {/* NEO Name */}
+                            <Text style={styles.itemNameText}>
+                                {props.item}
+                            </Text>
+                        </TouchableHighlight>
+                    </View>
+
+                {/* Buttons */}
+                <View style={styles.itemButtonWrapper}>
+                    <View style={styles.itemAddButtonContainer}>
+                        <CustomButton style={styles.addButton} title="REMOVE" callback={() => {user.handleNEOFavouritesListChange(props.item)}}/>
+                    </View>
+                </View>
+                
+            </View>
+    )};
 }
 
 const styles = StyleSheet.create({
