@@ -1,10 +1,15 @@
 import React, {useEffect} from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import { useState } from 'react/cjs/react.development';
-import { FlatList, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 
-
+/**
+ * Custom clock style date input
+ * @prop {date} value - Date to be displayed
+ * @prop {object} style - Style to overwrite the outer container
+ * @prop {function} onFocus - Callback function for pressing the clock
+ */
 export default function ClockStyleDateInput(props) {
     let [fontsLoaded] = useFonts({
         '3Dventure': require('../../assets/fonts/3Dventure.ttf'),
@@ -12,6 +17,7 @@ export default function ClockStyleDateInput(props) {
     let [dateList, setDateList] = useState(null);
     let [customStyle, setCustomStyle] = useState(props.style);
 
+    // Fetches the date and converts to string 
     useEffect(() => {
         if (props.value != null){
             let stringDate = props.value;
@@ -20,6 +26,7 @@ export default function ClockStyleDateInput(props) {
         }
     }, [props.value])
     
+    // Conditional rendering to ensure fonts load
     if (!fontsLoaded) {
         return(
             <View>
@@ -28,36 +35,33 @@ export default function ClockStyleDateInput(props) {
         );
     }else{
     return (
+        // Clock outer view
         <View style={[styles.mainView, customStyle]}>
-            {/* <TextInput
-            style={styles.textInput}
-            value={date}
-            onFocus={props.onFocus}
-            /> */}
-                <FlatList
-                    
-                    horizontal={true}
-                    contentContainerStyle={styles.listView}
-                    data={dateList}
-                    keyExtractor={(item, index) => 'key'+index}
-                    renderItem={({item}) => 
-                    {
-                        if(item == "-"){
-                            return (
-                                <Text style={{backgroundColor: "black", 
-                                width: 5,}}></Text> 
-                            )
-                        }else{
-                            return (
-                                <TouchableOpacity onPress={()=>{props.onFocus()}}>
-                                    <Text style={styles.itemText}>{item}</Text> 
-                                </TouchableOpacity>
-                            )
-                        }
+
+            {/* Clock is generated through a list of text components containing date digits*/}
+            <FlatList
+                horizontal={true}
+                contentContainerStyle={styles.listView}
+                data={dateList}
+                keyExtractor={(item, index) => 'key'+index}
+                renderItem={({item}) => 
+                {
+                    // Add spacing during dashes 
+                    if(item == "-"){
+                        return (
+                            <Text style={{backgroundColor: "black", 
+                            width: 5,}}></Text> 
+                        )
+                    }else{
+                        return (
+                            <TouchableOpacity onPress={()=>{props.onFocus()}}>
+                                <Text style={styles.itemText}>{item}</Text> 
+                            </TouchableOpacity>
+                        )
                     }
                 }
-
-                />
+            }
+            />
         </View>
     )
     }
