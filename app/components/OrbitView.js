@@ -7,18 +7,16 @@ import { UserContext } from '../provider/UserProvider';
 import fetchNEOOrbitData from '../functions/fetchNEOOrbitData';
 import { Text } from "react-native";
 import * as NEOGenerate from '../functions/generateNEOShapeData';
-import fetchNEOFavourites from '../functions/fetchNEOFavourites';
 
-// https://ssd-api.jpl.nasa.gov/doc/sbdb.html
-
+// Three js global variable
 global.THREE = global.THREE || THREE;
 
 export default function OrbitView(props) {
   const user = useContext(UserContext);
 
   // THREE Primary State Initialisers
-  const [scene, setScene] = useState(new THREE.Scene());
   const earthSize = 25;
+  const [scene, setScene] = useState(new THREE.Scene());
   const [earthShape, setEarthShape] = useState(
       new THREE.Mesh(new THREE.SphereBufferGeometry(earthSize, 8, 8), 
       new THREE.MeshBasicMaterial( { color: 0x1bb3fa } ))
@@ -28,94 +26,97 @@ export default function OrbitView(props) {
   // State for storing a list of the shape data for all favourited asteroids
   const [asteroidOrbitDataList, setAsteroidOrbitDataList] = useState(null);
   const [asteroidShapeDataList, setAsteroidShapeDataList] = useState(null);
-
-  // Fetch Orbit Data
-
   
   // Fetch Asteroid Orbit Data
   const fetchAsteroidOrbitData = async () => {
     let tempList = [];
     let asteroidList = [...user.NEOFavouritesList];
-    console.log("Asteroid list length:",asteroidList.length);
 
+    // Fetches the orbit data for each NEO in favourites
     for (const NEOid of asteroidList) {
       let orbitData = await fetchNEOOrbitData(NEOid);
       tempList.push(orbitData);
     }
-
     setAsteroidOrbitDataList(tempList);
   }
 
   // Asteroid Shape Data Initialiser
   const initialiseAsteroidShapeData = () => {
     let asteroidList = [],
-    planetColors = [
+    asteroidColors = [
       0x999999, // pale grey
       0x777777, // light grey
       0x555555, // grey 
       0x333333, // space grey
       0x111111 //dark grey
     ],
-    orbitData = asteroidOrbitDataList,
-    radii = 0;
+    orbitData = asteroidOrbitDataList
 
+  /**
+   * Creates THREE js objects for each NEO and its orbit line, and adds it to the scene
+   */
     for (let NEO of orbitData){
-        let size = NEOGenerate.getSize(NEO),
-          type = Math.floor(Math.random() * planetColors.length),
-          roughness = 0,
-          planetGeom = new THREE.Mesh(
-            new THREE.IcosahedronGeometry(size, roughness),
-            new THREE.MeshLambertMaterial({
-              color: planetColors[type],
-            })
-          ),
-          planet = new THREE.Object3D();
+
+      // Defining visual aspects
+      let size = NEOGenerate.getSize(NEO),
+        type = Math.floor(Math.random() * asteroidColors.length),
+        roughness = 0,
+        asteroidGeom = new THREE.Mesh(
+          new THREE.IcosahedronGeometry(size, roughness),
+          new THREE.MeshLambertMaterial({
+            color: asteroidColors[type],
+          })
+        ),
+        asteroid = new THREE.Object3D();
+    
+      asteroid.add(asteroidGeom);
       
-        planet.add(planetGeom);
-      
-        if (type > 1 && Math.random() > 0.5) {
-          let atmoGeom = new THREE.Mesh(
-            new THREE.IcosahedronGeometry(size + 1.5, roughness),
-            new THREE.MeshLambertMaterial({
-              color: planetColors[3],
-              transparent: true,
-              opacity: 1
-            })
-          );
-      
-          atmoGeom.castShadow = false;
-          planet.add(atmoGeom);
-        }
-      
-        planet.orbitRadius = NEOGenerate.getOrbitRadius(NEO)+earthSize;
-        planet.rotSpeed = 0.005 + Math.random() * 0.01;
-        planet.rotSpeed *= Math.random() < .10 ? -1 : 1;
-        planet.rot = Math.random();
-        planet.orbitSpeed = NEOGenerate.getVelocity(NEO);
-        planet.orbit = Math.random() * Math.PI * 2;
-        planet.position.set(planet.orbitRadius, 0, 0);
-      
-        radii = planet.orbitRadius + size;
-        asteroidList.push(planet);
-        scene.add(planet);
-      
-        let orbit = new THREE.Line(
-          new THREE.CircleGeometry(planet.orbitRadius, 90),
-          new THREE.MeshBasicMaterial({
-            color: 0xffffff,
+      // Adding atmosphere for better visual appearance
+      if (type > 1 && Math.random() > 0.5) {
+        let atmoGeom = new THREE.Mesh(
+          new THREE.IcosahedronGeometry(size + 1.5, roughness),
+          new THREE.MeshLambertMaterial({
+            color: asteroidColors[3],
             transparent: true,
-            opacity: .5,
-            side: THREE.BackSide
+            opacity: 1
           })
         );
-        orbit.geometry.vertices.shift();
-        orbit.rotation.x = THREE.Math.degToRad(90);
-        scene.add(orbit);
     
+        atmoGeom.castShadow = false;
+        asteroid.add(atmoGeom);
+      }
+    
+      // Defining orbital properties
+      asteroid.orbitRadius = NEOGenerate.getOrbitRadius(NEO)+earthSize;
+      asteroid.rotSpeed = 0.005 + Math.random() * 0.01;
+      asteroid.rotSpeed *= Math.random() < .10 ? -1 : 1;
+      asteroid.rot = Math.random();
+      asteroid.orbitSpeed = NEOGenerate.getVelocity(NEO);
+      asteroid.orbit = Math.random() * Math.PI * 2;
+      asteroid.position.set(asteroid.orbitRadius, 0, 0);
+    
+      // Adding asteroid to array for the update function, and to the scene
+      asteroidList.push(asteroid);
+      scene.add(asteroid);
+    
+      // Defining the orbit path properties
+      let orbit = new THREE.Line(
+        new THREE.CircleGeometry(asteroid.orbitRadius, 90),
+        new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          transparent: true,
+          opacity: .5,
+          side: THREE.BackSide
+        })
+      );
+      orbit.geometry.vertices.shift();
+      orbit.rotation.x = THREE.Math.degToRad(90);
+
+      // Adding orbit path to scene
+      scene.add(orbit);
     }
 
-    
-    console.log(asteroidList.length);
+    // Adding asteroid list to state
     setAsteroidShapeDataList(asteroidList);
   }
 
@@ -128,25 +129,31 @@ export default function OrbitView(props) {
   // Generate shape data
   useEffect(() => {
     if(asteroidShapeDataList == null && asteroidOrbitDataList != null){
-      console.log("Shape data initialised")
       initialiseAsteroidShapeData();
     }
   }, [asteroidOrbitDataList])
 
   // Update Function - Shapes to be animated
   const update = () => {
+    // Rotating the Earth
     earthShape.rotation.y += 0.005;
 
-    for (let p in asteroidShapeDataList) {
-      let planet = asteroidShapeDataList[p];
-      planet.rot += planet.rotSpeed;
-      planet.rotation.set(0, planet.rot, 0);
-      planet.orbit += planet.orbitSpeed;
-      planet.position.set(Math.cos(planet.orbit) * planet.orbitRadius, 0, Math.sin(planet.orbit) * planet.orbitRadius);
+    // Updating the position of each asteroid
+    for (let i in asteroidShapeDataList) {
+      let asteroid = asteroidShapeDataList[i];
+      asteroid.rot += asteroid.rotSpeed;
+      asteroid.rotation.set(0, asteroid.rot, 0);
+      asteroid.orbit += asteroid.orbitSpeed;
+      asteroid.position.set(Math.cos(asteroid.orbit) * asteroid.orbitRadius, 0, Math.sin(asteroid.orbit) * asteroid.orbitRadius);
     }
     
   }
 
+
+  /**
+   * Draws the scene
+   * @param {object} gl - Graphics library context
+   */
   const _onGLContextCreate = async gl => {
     let camera = new THREE.PerspectiveCamera(
       75, gl.drawingBufferWidth / gl.drawingBufferHeight, 0.1, 1000
@@ -160,6 +167,7 @@ export default function OrbitView(props) {
     scene.add(light);
     camera.position.set(0, 30, 200);
 
+    // Render function - calls updates and renders the objects
     const render = () => {
       requestAnimationFrame(render);
       update();
@@ -182,6 +190,4 @@ export default function OrbitView(props) {
       <Text>Loading Shape Data...</Text>
     )
   }
-
-  
 }
