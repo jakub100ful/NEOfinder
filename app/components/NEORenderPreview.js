@@ -1,17 +1,19 @@
-import React, { useContext } from "react";
+import React from "react";
 import * as THREE from "three";
 import ExpoTHREE from "expo-three";
 import { GLView } from 'expo-gl';
 import { useState } from "react/cjs/react.development";
-import { UserContext } from '../provider/UserProvider';
 import { Text } from "react-native";
 import * as NEOGenerate from '../functions/generateNEOShapeData';
 
 
 global.THREE = global.THREE || THREE;
 
+/**
+ * Renders graphical preview of a NEO object in a view
+ * @prop {object} NEO - NEO object to be displayed
+ */
 export default function NEORenderPreview(props) {
-  const user = useContext(UserContext);
 
   // THREE Primary State Initialisers
   const [scene, setScene] = useState(new THREE.Scene());
@@ -29,9 +31,12 @@ export default function NEORenderPreview(props) {
   const update = () => {
     asteroidShape.rotation.y += 0.005;
     asteroidShape.rotation.x += 0.005;
-
   }
 
+  /**
+   * Draws the scene
+   * @param {object} gl - Graphics library context
+   */
   const _onGLContextCreate = async gl => {
     let camera = new THREE.PerspectiveCamera(
       75, gl.drawingBufferWidth / gl.drawingBufferHeight, 0.1, 1000
@@ -40,7 +45,6 @@ export default function NEORenderPreview(props) {
     renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
 
     
-
     // Adding to scene
     asteroid.add(asteroidShape);
     scene.add(asteroid);
@@ -60,9 +64,10 @@ export default function NEORenderPreview(props) {
     }
   };
 
+  // Ensure props are loaded before rendering
   if (props.NEO){
     return(  
-          <GLView style={{ flex: 1, backgroundColor: "black" }} onContextCreate={_onGLContextCreate} />
+      <GLView style={{ flex: 1, backgroundColor: "black" }} onContextCreate={_onGLContextCreate} />
   
     )
   }else{

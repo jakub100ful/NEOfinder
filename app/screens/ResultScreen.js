@@ -39,7 +39,6 @@ function ResultScreen(props) {
      * @param {object} NEO - NEO object to be previewed. This is passed to the new screen through the navigation prop.
      */
     const viewOrbitNEO = (NEO) => {
-        console.log(NEO);
         props.navigation.navigate('Info', {NEO: NEO});
     }
 

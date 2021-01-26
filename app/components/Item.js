@@ -3,20 +3,27 @@ import { View, StyleSheet, Text } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import {UserContext} from '../provider/UserProvider';
 
-
+/**
+ * Renders the NEO result object
+ * @prop {object} item - NEO result object
+ */
 function Item(props) {
     const [item, setItem] = useState(props.item);
-    const [favList, setFavList] = useState(props.favList);
     const user = useContext(UserContext);
 
     return (
+        // Outer view
         <View key={item.id} style={styles.item}>
+
+            {/* Header */}
             <Text style={styles.itemHeader}>
                 {item.name}
             </Text>
 
             {/* Item Body */}
             <View style={styles.itemBodyView}>
+
+                {/* NEO Information */}
                 <View>
                     <Text style={styles.itemBodyText}>
                     Miss Distance: {Math.round(item.close_approach_data[0].miss_distance.kilometers*100)/100} km
@@ -24,19 +31,24 @@ function Item(props) {
                     <Text style={styles.itemBodyText}>
                     Relative Velocity: {Math.round(item.close_approach_data[0].relative_velocity.kilometers_per_second*100)/100} km/s
                     </Text>
-                    
                 </View>
                 
             </View>
+
+            {/* Buttons */}
             <View style={styles.buttonView}>
+
+                {/* View Button */}
                 <View style={styles.itemViewButtonContainer}>
                     <CustomButton style={styles.viewButton} title="VIEW" callback={() => {props.function(item)}}/>
                 </View>
+
+                {/* Save Button */}
                 <View style={styles.itemAddButtonContainer}>
                     <CustomButton style={styles.addButton} title={item.isInFavourites ? "UNSAVE" : "SAVE"} callback={() => {user.handleNEOFavouritesListChange(item)}}/>
                 </View>
-                </View>
-            
+
+            </View>
         </View>
     );
 }

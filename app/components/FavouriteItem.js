@@ -1,13 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import CustomButton from '../components/CustomButton';
 import {UserContext} from '../provider/UserProvider';
 
-
+/**
+ * Renders the item in favourite NEO list
+ * @prop {string} item - NEO ID for the item
+ */
 function FavouriteItem(props) {
     const user = useContext(UserContext);
 
+    // Conditional rendering to ensure the prop has loaded
     if (props.item == null){
         return(
         <View>
@@ -17,17 +21,20 @@ function FavouriteItem(props) {
     }else{
         return (
             <View key={props.item.id} style={styles.item}>
-                {/* Item Body */}
-                    <View style={styles.itemNameContainer}>
-                        <TouchableHighlight onPress={() => {props.function(props.item)}}>
-                            {/* NEO Name */}
-                            <Text style={styles.itemNameText}>
-                                {props.item}
-                            </Text>
-                        </TouchableHighlight>
-                    </View>
 
-                {/* Buttons */}
+                {/* Item Body */}
+                <View style={styles.itemNameContainer}>
+                    <TouchableHighlight onPress={() => {props.function(props.item)}}>
+                        
+                        {/* NEO Name */}
+                        <Text style={styles.itemNameText}>
+                            {props.item}
+                        </Text>
+                        
+                    </TouchableHighlight>
+                </View>
+
+                {/* Button */}
                 <View style={styles.itemButtonWrapper}>
                     <View style={styles.itemAddButtonContainer}>
                         <CustomButton style={styles.addButton} title="REMOVE" callback={() => {user.handleNEOFavouritesListChange(props.item)}}/>
@@ -61,7 +68,7 @@ const styles = StyleSheet.create({
     itemNameText: {
         color: "lightblue",
         fontFamily: "8-bit-Arcade-In",
-        fontSize: 40
+        fontSize: 40,
     },
     itemNameContainer: {
         flex: 2,

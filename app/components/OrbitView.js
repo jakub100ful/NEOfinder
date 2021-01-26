@@ -11,7 +11,11 @@ import * as NEOGenerate from '../functions/generateNEOShapeData';
 // Three js global variable
 global.THREE = global.THREE || THREE;
 
-export default function OrbitView(props) {
+
+/**
+ * Renders the orbit view of saved NEOs around the Earth
+ */
+export default function OrbitView() {
   const user = useContext(UserContext);
 
   // THREE Primary State Initialisers

@@ -1,8 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
 
-
-const ItemSeparator = (props) => <View style={{
+/**
+ * Renders the seperator for items in lists
+ */
+const ItemSeparator = () => <View style={{
     height: 2,
     backgroundColor: "rgba(0,0,0,0.3)"
 }} />

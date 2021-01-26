@@ -12,7 +12,6 @@ const getSizeComparison = async (measurement, measurementUnit) => {
     // Unloading payload depending on a successful call.
 
         if (responseJson){
-            console.log(responseJson.queryresult.pods[0].subpods[0].plaintext)
             return responseJson.queryresult.pods[0].subpods[0].plaintext;
         }else{
             error = "Unable to fetch facts at this moment. Please try later or restart the app.";

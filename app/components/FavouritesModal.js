@@ -27,6 +27,9 @@ export default function FavouritesModal(props) {
       props.navigation.navigate('Info', {NEOid: NEOid});
     }
 
+    /**
+     * Renders view for empty list
+     */
     const ListEmpty = () => {
       return(
         <View style={styles.listEmptyView}>
