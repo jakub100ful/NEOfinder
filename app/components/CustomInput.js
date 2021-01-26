@@ -11,8 +11,6 @@ function CustomInput(props) {
 
     let [date, setDate] = useState(props.value);
 
-    const showDatePicker = () => {props.showDatePicker}
-
     if (!fontsLoaded) {
         return(
             <View>
