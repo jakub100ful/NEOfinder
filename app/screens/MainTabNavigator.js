@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import HomeScreen from './HomeScreen';
 import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from './HomeScreen';
 import ResultScreen from './ResultScreen';
 import IntroScreen from './IntroScreen';
 import NEOInfoScreen from './NEOInfoScreen';

@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'
-import { FlatList, View, Text, StyleSheet, Image, SafeAreaView, Button } from 'react-native'
+import { FlatList, View, Text, StyleSheet, Image, SafeAreaView } from 'react-native'
 import { useState } from 'react/cjs/react.development';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
@@ -16,7 +16,7 @@ function ResultScreen(props) {
     const [neoList, setNeoList] = useState(null);
     const user = useContext(UserContext);
     
-
+    // Sets up the AsyncStore and fetches list of NEOs
     useEffect(() => {
         if(!AsyncStorage.getItem('userAddedNEOList')){
             AsyncStorage.setItem('userAddedNEOList', []);
@@ -55,17 +55,24 @@ function ResultScreen(props) {
         style={{
         flex: 1,
         }}>
+            {/* Background */}
             <Image style={styles.background} source={require('../../assets/star-bg.png')}/>
             <SafeAreaView style={styles.mainContainer}>
+
+                {/* Title of the screen */}
                 <View style={styles.titleView}>
                     <Text style={styles.titleText}>
                         {neoList ? 'Results ' : 'Loading'}
                     </Text>
                 </View>
+
+                {/* Error message */}
                 {error && <View style={styles.errorMessageBox}>
                     <Text>{error}</Text>
                 </View>
                 }
+
+                {/* List of results */}
                 <FlatList
                 style={styles.listView}
                 data={neoList}
@@ -74,11 +81,12 @@ function ResultScreen(props) {
                 refreshing={true}
                 renderItem={({item})=><Item item={item} function={viewOrbitNEO}/>}
                 />
+
+                {/* Back Button */}
                 <View style={styles.backButtonView}>
                     <CustomButton title="Back" callback={()=>{handleBackButton()}}/>
                 </View>
             </SafeAreaView>
-            
         </View>
     );
 }
