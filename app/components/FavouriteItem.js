@@ -1,14 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import { useEffect } from 'react/cjs/react.development';
 import CustomButton from '../components/CustomButton';
-import handleNEOInFavouriteState from '../functions/handleNEOInFavouriteState';
 import {UserContext} from '../provider/UserProvider';
 
 
 function FavouriteItem(props) {
-    const [favList, setFavList] = useState(props.favList);
     const user = useContext(UserContext);
 
     if (props.item == null){

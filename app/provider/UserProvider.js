@@ -28,12 +28,10 @@ const UserProvider = (props) => {
 
     /**
      * Takes a Near Earth Object item and adds or removes it from the favourites list.
-     * @param {object} NEO - Identifier for the NEO to be added/removed
+     * @param {object/string} NEO - NEO object to be added/removed or NEO ID to be removed
      */
     const handleNEOFavouritesListChange = (NEO) =>{
         try {
-            
-            
             const parsedList = NEOFavouritesList == null ? [] : NEOFavouritesList;
             const tempList = parsedList;
             let matchFound = false;
@@ -83,7 +81,6 @@ const UserProvider = (props) => {
         }
     };
 
-    
 
     return (
         <UserContext.Provider
