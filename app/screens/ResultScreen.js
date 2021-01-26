@@ -55,7 +55,7 @@ function ResultScreen(props) {
         flex: 1,
         }}>
             {/* Background */}
-            <Image style={styles.background} source={require('../../assets/star-bg.png')}/>
+            <Image style={styles.background} source={require('../../assets/images/star-bg.png')}/>
             <SafeAreaView style={styles.mainContainer}>
 
                 {/* Title of the screen */}

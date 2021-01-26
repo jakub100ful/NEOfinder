@@ -67,7 +67,7 @@ export default function NEOInfoScreen (props){
 
       // Background
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "black" }}>
-        <Image style={styles.background} source={require('../../assets/star-bg.png')}/>
+        <Image style={styles.background} source={require('../../assets/images/star-bg.png')}/>
         
         {/* Body */}
         <View style={styles.body}>

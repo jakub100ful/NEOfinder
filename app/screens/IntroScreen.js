@@ -16,11 +16,11 @@ function IntroScreen(props) {
         <View style={styles.mainContainer}>
 
             {/* Background */}
-            <Image style={styles.background} source={require('../../assets/star-bg.png')}/>
+            <Image style={styles.background} source={require('../../assets/images/star-bg.png')}/>
 
             {/* Logo */}
             <View style={styles.logoView}>
-                <Image style={styles.stretch} source={require('../../assets/neo-finder-logo.png')}/>
+                <Image style={styles.stretch} source={require('../../assets/images/neo-finder-logo.png')}/>
             </View>
 
             {/* Start button */}

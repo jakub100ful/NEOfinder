@@ -58,7 +58,7 @@ function HomeScreen(props) {
     return (
         <View style={styles.container}>
             {/* Background covers entire screen */}
-            <Image style={styles.background} source={require('../../assets/star-bg.png')}/>
+            <Image style={styles.background} source={require('../../assets/images/star-bg.png')}/>
             
             {/* Workable area */}
 
