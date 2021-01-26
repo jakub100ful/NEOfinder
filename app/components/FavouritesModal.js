@@ -22,7 +22,6 @@ export default function FavouritesModal(props) {
      * @param {object} NEOid - NEO object to be previewed. This is passed to the new screen through the navigation prop.
      */
     const viewNEOInfo = (NEOid) => {
-      console.log("Navigate!")
       props.callback();
       props.navigation.navigate('Info', {NEOid: NEOid});
     }
@@ -39,9 +38,7 @@ export default function FavouritesModal(props) {
     }
 
     useEffect(() => {
-      console.log("STATE CHANGE")
       let tempList = [...user.NEOFavouritesList]
-      console.log(tempList);
       setFavouriteNEOs(tempList);
     }, [user.NEOFavouritesList])
 
